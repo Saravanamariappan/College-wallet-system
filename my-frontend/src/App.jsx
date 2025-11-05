@@ -5,8 +5,11 @@ import "./App.css";
 import AdminWallet from "./components/AdminWallet.jsx";
 import AddStudent from "./components/AddStudent";
 import Dashboard from "./components/Dashboard.jsx"; // Student Dashboard
-import Transactions from "./components/Transactions.jsx";
+import Transactions from "./components/Transactions.jsx"; // Student/Shared Transactions
 import SendTokens from "./components/SendTokens.jsx";
+import VendorDashboard from "./components/VendorDashboard.jsx"; // New: Vendor Dashboard
+import ReceiveTokens from "./components/ReceiveTokens.jsx"; // New: Vendor Receive Tokens
+import VendorTransactions from "./components/VendorTransactions.jsx"; // New: Vendor-specific Transactions (or reuse if data is dynamic)
 
 /* ===============================
    🧭 LOGIN PAGE COMPONENT
@@ -34,7 +37,12 @@ function LoginPage() {
         alert("❌ Invalid student credentials");
       }
     } else if (activeTab === "vendor") {
-      alert("Vendor login feature not yet connected 🚧");
+      // Mock vendor login credentials (added: VEN001 / password123)
+      if (username === "VEN001" && password === "password123") {
+        navigate("/vendor-dashboard");
+      } else {
+        alert("❌ Invalid vendor credentials. Demo: VEN001 / password123");
+      }
     }
   };
 
@@ -97,7 +105,7 @@ function LoginPage() {
               <>
                 <input
                   type="text"
-                  placeholder="Vendor Email"
+                  placeholder="Vendor ID"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
@@ -234,6 +242,63 @@ function App() {
                 </nav>
               </header>
               <Transactions />
+            </div>
+          }
+        />
+
+        {/* Vendor Dashboard (New) */}
+        <Route
+          path="/vendor-dashboard"
+          element={
+            <div className="App">
+              <header className="App-header">
+                <h1>Vendor Wallet</h1>
+                <nav>
+                  <Link to="/vendor-dashboard">Dashboard</Link> |{" "}
+                  <Link to="/receive">Receive Tokens</Link> |{" "}
+                  <Link to="/vendor-transactions">Transactions</Link> |{" "}
+                  <Link to="/">Logout</Link>
+                </nav>
+              </header>
+              <VendorDashboard />
+            </div>
+          }
+        />
+
+        {/* Vendor Receive Tokens (New) */}
+        <Route
+          path="/receive"
+          element={
+            <div className="App">
+              <header className="App-header">
+                <h1>Receive Tokens</h1>
+                <nav>
+                  <Link to="/vendor-dashboard">Dashboard</Link> |{" "}
+                  <Link to="/receive">Receive Tokens</Link> |{" "}
+                  <Link to="/vendor-transactions">Transactions</Link> |{" "}
+                  <Link to="/">Logout</Link>
+                </nav>
+              </header>
+              <ReceiveTokens />
+            </div>
+          }
+        />
+
+        {/* Vendor Transactions (New - separate route to avoid conflict with student /transactions) */}
+        <Route
+          path="/vendor-transactions"
+          element={
+            <div className="App">
+              <header className="App-header">
+                <h1>Vendor Transactions</h1>
+                <nav>
+                  <Link to="/vendor-dashboard">Dashboard</Link> |{" "}
+                  <Link to="/receive">Receive Tokens</Link> |{" "}
+                  <Link to="/vendor-transactions">Transactions</Link> |{" "}
+                  <Link to="/">Logout</Link>
+                </nav>
+              </header>
+              <VendorTransactions />
             </div>
           }
         />

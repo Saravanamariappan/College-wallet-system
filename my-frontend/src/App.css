@@ -25,6 +25,13 @@
   /* Teal for charts */
   --primary-teal: #14b8a6;
   --light-teal: #a7f3d0;
+
+  /* Vendor-specific accents (added for consistency) */
+  --success-green: #10b981;
+  --error-red: #ef4444;
+  --warning-yellow: #f59e0b;
+  --border-radius: 12px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 body {
@@ -463,4 +470,283 @@ select:focus {
   :root {
     color-scheme: light;
   }
+}
+
+/* ==============================================
+   🛠️ VENDOR & SHARED DASHBOARD ENHANCEMENTS
+   (Added for VendorDashboard, ReceiveTokens, VendorTransactions compatibility)
+============================================== */
+
+/* App Header with Icon (for dashboards) */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.app-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary-purple), var(--primary-teal));
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.app-title {
+  color: var(--primary-purple);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Main Title */
+.dashboard-main-title, .page-title {
+  text-align: center;
+  color: var(--text-dark);
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.page-description {
+  text-align: center;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Cards Wrapper (for balance and spending cards) */
+.cards-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.primary-gradient {
+  background: linear-gradient(135deg, var(--primary-purple), var(--light-purple)) !important;
+  color: white !important;
+}
+
+/* Chart Styles (for Recharts) */
+.recharts-wrapper {
+  margin-top: 1rem;
+}
+
+/* Action Buttons Wrapper */
+.action-buttons-wrapper {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.action-button.primary-button {
+  background: linear-gradient(135deg, var(--primary-purple), var(--light-purple));
+  color: white;
+  border: none;
+}
+
+.action-button.secondary-button {
+  background: white;
+  color: var(--primary-purple);
+  border: 2px solid var(--primary-purple);
+}
+
+/* Recent Transactions & List */
+.recent-transactions, .transactions-list {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.recent-transactions h3 {
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+}
+
+.transactions-list {
+  list-style: none;
+}
+
+.transaction-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.transaction-icon {
+  font-size: 1.5rem;
+}
+
+.transaction-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.transaction-title {
+  font-weight: bold;
+}
+
+.transaction-date {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.view-all-link {
+  display: inline-block;
+  color: var(--primary-purple);
+  text-decoration: none;
+  margin-top: 1rem;
+}
+
+.view-all-link:hover {
+  text-decoration: underline;
+}
+
+.no-transactions {
+  text-align: center;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+/* Form Styles for ReceiveTokens/SendTokens */
+.form-card {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+.text-input, .large-input {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.large-input {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.input-with-button {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon-button {
+  background: var(--primary-teal);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.fee-row {
+  color: var(--warning-yellow);
+}
+
+.full-width-button {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1.1rem;
+}
+
+/* Back Link */
+.back-link {
+  display: inline-block;
+  color: var(--primary-purple);
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* Enhanced Tip Box */
+.tip-box {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border: 1px solid #0ea5e9;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  color: var(--text-dark);
+  margin-top: 1rem; /* Override if needed */
+}
+
+.tip-icon {
+  font-size: 1.2rem;
+}
+
+.info-tip {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-color: var(--warning-yellow);
+}
+
+/* Page Container (for non-dashboard pages) */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Enhanced Status and Amounts */
+.status-completed {
+  background: var(--success-green);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+/* Responsive for New Elements */
+@media (max-width: 768px) {
+  .cards-wrapper {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons-wrapper {
+    flex-direction: column;
+  }
+  
+  .dashboard, .page-container {
+    padding: 1rem;
+  }
+}
+
+/* New: Connected Account Style for Wallet */
+.connected-account {
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--success-green);
+  font-size: 0.9rem;
+  color: var(--success-green);
+  font-weight: bold;
 }
