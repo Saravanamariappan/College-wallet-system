@@ -1,37 +1,19 @@
-import { ethers } from "ethers";
-import ABI from "../../blockchain/artifacts/contracts/Lock.sol/StudentWallet.json";
+import { useEffect, useState } from "react";
 
-function StudentWallet() {
+export default function StudentWallet({ wallet }) {
+  const [balance, setBalance] = useState(0);
 
-  const connectWallet = async () => {
-    // MetaMask check
-    if (!window.ethereum) {
-      alert("MetaMask install pannunga");
-      return;
-    }
-
-    // MetaMask connect
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-
-    // Contract connect
-    const contract = new ethers.Contract(
-      "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      ABI.abi,
-      signer
-    );
-
-    // Example: balance read
-    const balance = await contract.getBalance();
-    alert(`Wallet Balance: ${balance}`);
-  };
+  useEffect(() => {
+    fetch(`/api/blockchain/balance/${wallet}`)
+      .then(res => res.json())
+      .then(data => setBalance(data.balance));
+  }, [wallet]);
 
   return (
     <div>
       <h2>Student Wallet</h2>
-      <button onClick={connectWallet}>Connect Wallet</button>
+      <p>Wallet Address: {wallet}</p>
+      <p>Balance: {balance}</p>
     </div>
   );
 }
-
-export default StudentWallet;

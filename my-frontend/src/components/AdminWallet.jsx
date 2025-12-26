@@ -1,55 +1,132 @@
-import React, { useState } from "react";
-import { ethers } from "ethers";
+import React, { useEffect, useState } from "react";
+
+const API_BASE = "http://localhost:5000/api";
 
 function AdminWallet() {
-  const [walletAddress, setWalletAddress] = useState("");
-  const [isConnected, setIsConnected] = useState(false);
+  // =====================
+  // DASHBOARD DATA
+  // =====================
+  const [totalStudents, setTotalStudents] = useState(0);
+  const [totalVendors, setTotalVendors] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
 
-  const connectWallet = async () => {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        setWalletAddress(accounts[0]);
-        setIsConnected(true);
-      } catch (error) {
-        console.error("User rejected connection request");
-      }
-    } else {
-      alert("MetaMask not detected. Please install MetaMask!");
-    }
+  // =====================
+  // SEND TOKEN
+  // =====================
+  const [studentId, setStudentId] = useState("");
+  const [amount, setAmount] = useState("");
+
+  // =====================
+  // LOAD DASHBOARD STATS
+  // =====================
+  const loadStats = () => {
+    fetch(`${API_BASE}/admin/stats`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTotalStudents(data.totalStudents || 0);
+        setTotalVendors(data.totalVendors || 0);
+        setTotalBalance(data.totalBalance || 0);
+      })
+      .catch((err) => {
+        console.error("❌ Stats fetch error:", err);
+      });
   };
 
-  return (
-    <div>
-      <h2>Admin Wallet</h2>
-      <p>Create a wallet for managing student accounts or transactions.</p>
-      {!isConnected ? (
-        <button onClick={connectWallet}>Connect Wallet</button>
-      ) : (
-        <button disabled style={{ backgroundColor: "#4caf50" }}>
-          Connected: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
-        </button>
-      )}
+  useEffect(() => {
+    loadStats();
+  }, []);
 
+  // =====================
+  // SEND TOKEN
+  // =====================
+  const sendTokenToStudent = () => {
+    if (!studentId || !amount) {
+      alert("Student ID and Amount required");
+      return;
+    }
+
+    fetch(`${API_BASE}/admin/send-token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        studentId,
+        amount: Number(amount),
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.message) {
+          alert("✅ " + data.message);
+          setStudentId("");
+          setAmount("");
+          loadStats(); // 🔥 refresh dashboard after sending token
+        } else {
+          alert("❌ Something went wrong");
+        }
+      })
+      .catch((err) => {
+        console.error("❌ Send token error:", err);
+        alert("Server error");
+      });
+  };
+
+  // =====================
+  // UI
+  // =====================
+  return (
+    <div className="admin-dashboard">
+      <h1 className="admin-title">Admin Dashboard</h1>
+
+      {/* STATS */}
       <div className="stats-container">
-        <div className="stat-box" style={{ backgroundColor: "#e1bee7" }}>
-          <h2>1256</h2>
+        <div className="stat-box">
+          <h2>{totalStudents}</h2>
           <p>Total Students</p>
         </div>
-        <div className="stat-box" style={{ backgroundColor: "#dcedc8" }}>
-          <h2>892</h2>
-          <p>Active Wallets</p>
+
+        <div className="stat-box">
+          <h2>{totalVendors}</h2>
+          <p>Total Vendors</p>
         </div>
-        <div className="stat-box" style={{ backgroundColor: "#fff9c4" }}>
-          <h2>45,178</h2>
+
+        <div className="stat-box">
+          <h2>₹{totalBalance}</h2>
           <p>Total Balance</p>
         </div>
-        <div className="stat-box" style={{ backgroundColor: "#ffccbc" }}>
-          <h2>23</h2>
-          <p>Pending</p>
-        </div>
+      </div>
+
+      {/* SEND TOKEN */}
+      <div className="transactions-card">
+        <h3>Send Token to Student</h3>
+
+        <input
+          className="text-input"
+          placeholder="Student ID (ex: STU001)"
+          value={studentId}
+          onChange={(e) => setStudentId(e.target.value)}
+        />
+
+        <input
+          className="text-input"
+          placeholder="Amount"
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+
+        <br /><br />
+
+        <button className="primary-button" onClick={sendTokenToStudent}>
+          Send Token
+        </button>
+      </div>
+
+      {/* TRANSACTIONS (NEXT STEP) */}
+      <div className="transactions-card" style={{ marginTop: "30px" }}>
+        <h3>Recent Transactions</h3>
+        <p>➡️ Next step-la backend connect pannalam</p>
       </div>
     </div>
   );

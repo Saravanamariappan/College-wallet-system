@@ -1,21 +1,22 @@
 const hre = require("hardhat");
 
 async function main() {
-  const { ethers } = hre;
+  const [admin, backend] = await hre.ethers.getSigners();
 
-  const [deployer] = await ethers.getSigners();
-  console.log("Deploying with account:", deployer.address);
+  console.log("Admin:", admin.address);
+  console.log("Backend:", backend.address);
 
-  const StudentWallet = await ethers.getContractFactory("StudentWallet");
-  const contract = await StudentWallet.deploy();
+  const Token = await hre.ethers.getContractFactory("KGISLCollegeToken");
 
-  await contract.deployed();
+  // ✅ PASS BACKEND ADDRESS
+  const token = await Token.deploy(backend.address);
 
+  await token.deployed();
 
-  console.log("StudentWallet deployed at:", contract.address);
+  console.log("KGISLCollegeToken deployed to:", token.address);
 }
 
 main().catch((error) => {
   console.error(error);
-  process.exit(1);
+  process.exitCode = 1;
 });

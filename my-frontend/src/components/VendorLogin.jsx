@@ -1,61 +1,31 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import for navigation after login
-import "./../App.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function VendorLogin() {
-  const [vendorId, setVendorId] = useState(""); // State for Vendor ID input
-  const [password, setPassword] = useState(""); // State for Password input
-  const [error, setError] = useState(""); // State for error messages
-  const navigate = useNavigate(); // Hook for navigation
+  const [vendorId, setVendorId] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  // Hardcoded demo credentials (you can replace with API call later)
-  const demoVendorId = "VEN001";
-  const demoPassword = "password123";
+  const login = async () => {
+    const res = await fetch("http://localhost:5000/api/auth/vendor/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ vendorId, password }),
+    });
 
-  const handleLogin = (e) => {
-    e.preventDefault(); // Prevent page reload
-    setError(""); // Clear previous errors
-
-    // Simple validation: Check if inputs match demo credentials
-    if (vendorId === demoVendorId && password === demoPassword) {
-      // Successful login: Navigate to Vendor Dashboard
-      // Assume route is "/vendor-dashboard" - update App.jsx routing accordingly
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("vendor", JSON.stringify(data.vendor));
       navigate("/vendor-dashboard");
-      // Optional: Store user role in localStorage for auth guard
-      localStorage.setItem("userRole", "vendor");
-      localStorage.setItem("vendorId", vendorId);
-    } else {
-      // Error: Invalid credentials
-      setError("Invalid Vendor ID or Password. Demo: VEN001 / password123");
-    }
+    } else alert(data.message);
   };
 
   return (
-    <div className="login-page">
-      <div className="login-box">
-        <h2>Vendor Login</h2>
-        <form onSubmit={handleLogin}>
-          <input
-            type="text"
-            placeholder="Vendor ID"
-            value={vendorId}
-            onChange={(e) => setVendorId(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {error && <p className="error-message">{error}</p>} {/* Display error */}
-          <button type="submit">Login</button>
-        </form>
-        <p className="demo-note">
-          Demo Credentials: VEN001 / password123
-        </p>
-      </div>
+    <div className="login-box">
+      <h2>Vendor Login</h2>
+      <input placeholder="Vendor ID" onChange={e => setVendorId(e.target.value)} />
+      <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
+      <button onClick={login}>Login</button>
     </div>
   );
 }
