@@ -1,0 +1,93 @@
+.exit
+)
+  "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+await token.getBalance(
+)
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+await token.getBalance(
+)
+  10
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+)
+  10
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+await token.connect(admin).mint(
+)
+await   "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+)
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+await token.connect(admin).registerStudent(
+const [admin] = await ethers.getSigners()
+)
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  "KGISLCollegeToken",
+const token = await ethers.getContractAt(
+accounts
+const accounts = await ethers.getSigners()
+.exit
+accounts
+const accounts = await ethers.getSigners()
+accounts
+const accounts = await ethers.getSigners()
+await token.getBalance("STUDENT_ADDRESS")
+)
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  "KGISLCollegeToken",
+const token = await ethers.getContractAt(.ut})
+  to: "0x19E03ce8E49c2F25Cec8133E765d855261Bade8a",
+await owner.sendTransaction({
+await ethers.provider.getBalance("0x19E03ce8E49c2F25Cec8133E765d855261Bade8a")
+  value: ethers.pa})
+  to: "0x19E03ce8E49c2F25Cec8133E765d855261Bade8a",
+await owner.sendTransaction({
+const [owner] = await ethers.getSigners()
+.exit
+await ethers.provider.getBalance("0x19E03ce8E49c2F25Cec8133E765d855261Bade8a")
+  value: ethers.pa})
+  to: "0x19E03ce8E49c2F25Cec8133E765d855261Bade8a",
+await owner.sendTransaction({
+const [owner] = await ethers.getSigners()
+.exit
+const [owner] = await ethers.getSigners()
+  value: ethers.parseEthe})
+await o  to: "0x19E03ce8E49c2F25Cec8133E765d855261Bade8a",
+const [owner] = await ethers.getSigners()
+})
+  value: ethers.parseEther("10")
+await o  to: "0x19E03ce8E49c2F25Cec8133E765d855261Bade8a",
+const [owner] = await ethers.getSigners()
+)
+  "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+await token.getBalance(
+)
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+await token.getBalance(
+)
+  10
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+)
+  10
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+await token.connect(admin).mint(
+)
+await   "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+)
+  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+await token.connect(admin).registerStudent(
+const [admin] = await ethers.getSigners()
+)
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  "KGISLCollegeToken",
+const token = await ethers.getContractAt(
+accounts
+const accounts = await ethers.getSigners()
+.exit
+accounts
+const accounts = await ethers.getSigners()
+accounts
+const accounts = await ethers.getSigners()
+await token.getBalance("STUDENT_ADDRESS")
+)
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  "KGISLCollegeToken",
+const token = await ethers.getContractAt(

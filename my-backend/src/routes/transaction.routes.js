@@ -1,0 +1,7 @@
+import express from "express";
+import { createTransaction } from "../controllers/transaction.controler.js";
+import { protect } from "../middleware/authMiddleware.js";
+
+const router = express.Router();
+router.post("/", protect, createTransaction);
+export default router;
