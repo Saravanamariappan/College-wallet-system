@@ -1,11 +1,14 @@
-import { ethers } from "ethers";
+import { Wallet } from "ethers";
 
-export function createStudentWallet() {
-  const wallet = ethers.Wallet.createRandom();
+/* ==================================================
+   COMMON WALLET CREATOR
+   (Student / Vendor / Admin)
+================================================== */
+export function createWallet() {
+  const wallet = Wallet.createRandom();
 
   return {
     address: wallet.address,
-    privateKey: wallet.privateKey,
-    mnemonic: wallet.mnemonic.phrase
+    privateKey: wallet.privateKey
   };
 }

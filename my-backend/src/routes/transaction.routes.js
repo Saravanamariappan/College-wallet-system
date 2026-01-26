@@ -1,7 +1,12 @@
 import express from "express";
-import { createTransaction } from "../controllers/transaction.controler.js";
-import { protect } from "../middleware/authMiddleware.js";
+import {
+  getStudentTransactions,
+  getVendorTransactions,
+} from "../controllers/transaction.controller.js";
 
 const router = express.Router();
-router.post("/", protect, createTransaction);
+
+router.get("/student/:address", getStudentTransactions);
+router.get("/vendor/:address", getVendorTransactions);
+
 export default router;

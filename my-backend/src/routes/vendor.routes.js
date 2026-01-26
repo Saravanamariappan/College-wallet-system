@@ -1,8 +1,31 @@
 import express from "express";
-import { createVendor } from "../controllers/vendor.controller.js";
+import {
+  getVendorDashboard,
+  vendorSendAdmin,
+  getVendorTransactions,
+  searchVendors,
+  getAllVendors,
+} from "../controllers/vendorController.js";
 
 const router = express.Router();
 
-router.post("/create", createVendor);
+router.get('/dashboard/:userId', getVendorDashboard);
+
+
+router.post("/send-admin", vendorSendAdmin);
+
+router.get("/", (req, res) => {
+  res.json({ message: "Vendor API working ✅" });
+});
+
+router.get("/all", getAllVendors);
+
+router.get("/transactions/:wallet", getVendorTransactions);
+
+router.get("/vendors/search", searchVendors);
+
+
+
+
 
 export default router;

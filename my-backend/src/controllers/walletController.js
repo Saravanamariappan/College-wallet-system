@@ -1,16 +1,46 @@
-import db from "../config/db.js";
-import { getOnChainBalance } from "../services/blockchainService.js";
+// src/controllers/walletController.js
 
+import { ethers } from "ethers";
+import dotenv from "dotenv";
+dotenv.config();
 
-export const getBalance = async (req, res) => {
-const { user_id } = req.params;
+export const getWalletBalance = async (req, res) => {
+  try {
+    const { walletAddress } = req.params;
 
+    // Validate wallet address
+    if (!walletAddress || !ethers.isAddress(walletAddress)) {
+      return res.status(400).json({ error: "Invalid wallet address" });
+    }
 
-db.query("SELECT wallet_address FROM users WHERE user_id=?", [user_id], async (err, rows) => {
-if (rows.length === 0) return res.status(404).json({ error: "User not found" });
+    // Connect RPC
+    const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 
+    // Token Contract ABI (minimum required)
+    const tokenABI = [
+      "function balanceOf(address owner) view returns (uint256)",
+      "function decimals() view returns (uint8)"
+    ];
 
-const balance = await getOnChainBalance(rows[0].wallet_address);
-res.json({ balance: balance.toString() });
-});
+    // Connect contract
+    const token = new ethers.Contract(
+      process.env.CONTRACT_ADDRESS,
+      tokenABI,
+      provider
+    );
+
+    // Read balance
+    const balance = await token.balanceOf(walletAddress);
+    const decimals = await token.decimals();
+
+    res.json({
+      wallet: walletAddress,
+      raw_balance: balance.toString(),
+      formatted_balance: Number(balance) / 10 ** decimals
+    });
+
+  } catch (err) {
+    console.error("Wallet balance error:", err);
+    res.status(500).json({ error: "Failed to fetch wallet balance" });
+  }
 };

@@ -1,4 +1,5 @@
-import { contract } from "../services/blockchainService.js";
+import { adminContract as contract } from "../services/blockchainService.js";
+
 
 async function check() {
   console.log("Contract address:", contract.target);

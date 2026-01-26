@@ -1,5 +1,8 @@
 import express from "express";
-import { getBalance } from "../controllers/walletController.js";
-const r = express.Router();
-r.get('/balance/:user_id', getBalance);
-export default r;
+import { getWalletBalance } from "../controllers/walletController.js";
+
+const router = express.Router();
+
+router.get("/balance/:walletAddress", getWalletBalance);
+
+export default router;
