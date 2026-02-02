@@ -1,35 +1,29 @@
-import React, { useState } from 'react';
-import {
-  User,
-  Key,
-  Eye,
-  EyeOff,
-  Copy,
-  Check,
-  Shield,
-  Bell,
-  LogOut,
-} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { User, Key, Eye, EyeOff, Copy, Check, Shield, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { getStudentPrivateKey } from '@/services/studentApi';
 import { toast } from 'sonner';
 
 const StudentSettings: React.FC = () => {
   const { user, logout } = useAuth();
 
+  const [privateKey, setPrivateKey] = useState<string>('');
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const [copiedKey, setCopiedKey] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
 
+  useEffect(() => {
+    if (!user?.id) return;
+
+    getStudentPrivateKey(user.id)
+      .then(res => setPrivateKey(res.data.privateKey))
+      .catch(() => toast.error("Failed to load private key"));
+  }, [user?.id]);
+
   const safeName = user?.name || user?.email?.split('@')[0] || 'Student';
 
-  const copyToClipboard = async (
-    text?: string,
-    type?: 'key' | 'address'
-  ) => {
-    if (!text) {
-      toast.error('Nothing to copy');
-      return;
-    }
+  const copyToClipboard = async (text?: string, type?: 'key' | 'address') => {
+    if (!text) return toast.error('Nothing to copy');
 
     await navigator.clipboard.writeText(text);
 
@@ -43,169 +37,79 @@ const StudentSettings: React.FC = () => {
       setTimeout(() => setCopiedAddress(false), 2000);
     }
 
-    toast.success('Copied to clipboard!');
+    toast.success('Copied!');
   };
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-bold mb-1">
-          Settings
-        </h1>
-        <p className="text-muted-foreground">
-          Manage your account
-        </p>
+
+      {/* PROFILE */}
+      <div className="glass-card p-4">
+        <h3 className="text-xl font-semibold mb-1">{safeName}</h3>
+        <p className="text-muted-foreground">{user?.email}</p>
+        <p className="text-xs mt-1">ID: {user?.id}</p>
       </div>
 
-      {/* Profile */}
-      <div className="glass-card p-4 lg:p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-2xl font-bold text-primary-foreground">
-            {safeName.charAt(0).toUpperCase()}
-          </div>
-
-          <div>
-            <h3 className="text-xl font-semibold">
-              {safeName}
-            </h3>
-            <p className="text-muted-foreground">
-              {user?.email}
-            </p>
-            <span className="inline-block mt-1 px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-medium capitalize">
-              {user?.role}
-            </span>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="p-4 bg-secondary/50 rounded-xl">
-            <p className="text-sm text-muted-foreground mb-1">
-              Student ID
-            </p>
-            <p className="font-mono">{user?.id}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Wallet */}
-      <div className="glass-card p-4 lg:p-6">
-        <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <Key className="w-5 h-5 text-primary" />
-          Wallet Details
+      {/* WALLET */}
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-3 flex items-center gap-2">
+          <Key className="w-5 h-5" />
+          Wallet
         </h3>
 
-        <div className="space-y-4">
-          {/* Wallet Address */}
-          <div className="p-4 bg-secondary/50 rounded-xl">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm text-muted-foreground">
-                Wallet Address
-              </p>
-              <button
-                onClick={() =>
-                  copyToClipboard(
-                    user?.walletAddress,
-                    'address'
-                  )
-                }
-                className="copy-btn"
-              >
-                {copiedAddress ? (
-                  <Check className="w-4 h-4 text-success" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
+        {/* ADDRESS */}
+        <div className="p-3 bg-secondary/50 rounded-lg">
+          <p className="text-xs mb-1">Wallet Address</p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="font-mono text-sm break-all">
+              {user?.walletAddress}
+            </p>
+            <button onClick={() => copyToClipboard(user?.walletAddress, 'address')}>
+              {copiedAddress ? <Check /> : <Copy />}
+            </button>
+          </div>
+        </div>
+
+        {/* PRIVATE KEY */}
+        <div className="p-3 mt-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+          <p className="text-xs text-destructive mb-1 flex items-center gap-1">
+            <Shield size={14} /> Private Key
+          </p>
+
+          <div className="flex items-center justify-between gap-3">
+            <p className="font-mono text-sm break-all">
+              {showPrivateKey ? privateKey : "••••••••••••••••••••••••••••••••"}
+            </p>
+
+            <div className="flex gap-2">
+              <button onClick={() => setShowPrivateKey(!showPrivateKey)}>
+                {showPrivateKey ? <EyeOff /> : <Eye />}
+              </button>
+              <button onClick={() => copyToClipboard(privateKey, 'key')}>
+                {copiedKey ? <Check /> : <Copy />}
               </button>
             </div>
-            <p className="font-mono text-sm break-all">
-              {user?.walletAddress || '—'}
-            </p>
-          </div>
-
-          {/* Private Key */}
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-xl">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm text-destructive font-medium flex items-center gap-2">
-                <Shield className="w-4 h-4" />
-                Private Key (Keep Secret!)
-              </p>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() =>
-                    setShowPrivateKey(!showPrivateKey)
-                  }
-                  className="p-2 rounded-lg bg-secondary/50 hover:bg-secondary transition"
-                >
-                  {showPrivateKey ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                </button>
-
-                <button
-                  onClick={() =>
-                    copyToClipboard(
-                      user?.privateKey,
-                      'key'
-                    )
-                  }
-                  className="copy-btn"
-                >
-                  {copiedKey ? (
-                    <Check className="w-4 h-4 text-success" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <p className="font-mono text-sm break-all">
-              {showPrivateKey
-                ? user?.privateKey
-                : '••••••••••••••••••••••••••••••••••••••••••••••••••'}
-            </p>
-
-            <p className="text-xs text-destructive mt-2">
-              ⚠️ Never share your private key with anyone!
-            </p>
           </div>
         </div>
       </div>
 
-      {/* Preferences (UI only) */}
-      <div className="glass-card p-4 lg:p-6">
-        <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <Bell className="w-5 h-5 text-primary" />
-          Preferences
-        </h3>
-
-        <div className="space-y-3">
-          {['Push Notifications', 'Transaction Alerts'].map(
-            (label) => (
-              <div
-                key={label}
-                className="flex items-center justify-between p-3 bg-secondary/30 rounded-xl"
-              >
-                <span>{label}</span>
-                <div className="w-12 h-6 bg-primary rounded-full relative">
-                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full" />
-                </div>
-              </div>
-            )
-          )}
-        </div>
+      {/* SECURITY INFO */}
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-2">Security Tips</h3>
+        <ul className="text-sm text-muted-foreground space-y-1 list-disc pl-5">
+          <li>Never share your private key</li>
+          <li>Do not store screenshots of private key</li>
+          <li>Use wallet only on trusted devices</li>
+        </ul>
       </div>
 
-      {/* Logout */}
+      {/* LOGOUT */}
       <button
         onClick={logout}
-        className="w-full glass-card p-4 flex items-center justify-center gap-2 text-destructive hover:bg-destructive/10 transition"
+        className="w-full glass-card p-4 flex items-center justify-center gap-2 text-destructive"
       >
         <LogOut className="w-5 h-5" />
-        <span className="font-medium">Logout</span>
+        Logout
       </button>
     </div>
   );

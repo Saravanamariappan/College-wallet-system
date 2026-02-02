@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Coins, ExternalLink, CheckCircle } from "lucide-react";
+import { Coins, CheckCircle } from "lucide-react";
 import axios from "axios";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
@@ -9,27 +9,48 @@ const AdminMintTokens: React.FC = () => {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [mintResult, setMintResult] = useState<any>(null);
+
   const [history, setHistory] = useState<any[]>([]);
+  const [totalMinted, setTotalMinted] = useState<number>(0);
 
   const quickAmounts = [100, 500, 1000, 5000];
 
+  /* ===============================
+     FETCH TOTAL MINTED (DB)
+  =============================== */
+  const fetchTotalMinted = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/admin/mint/total"
+      );
+      setTotalMinted(Number(res.data.totalMinted));
+    } catch (err) {
+      console.error("Total minted fetch error:", err);
+    }
+  };
+
+  /* ===============================
+     FETCH MINT HISTORY
+  =============================== */
   const fetchHistory = async () => {
-  try {
-    const res = await axios.get(
-      "http://localhost:5000/api/admin/mint/history"
-    );
-
-    setHistory(res.data.data || []);
-  } catch (err) {
-    console.error("Fetch history error:", err);
-  }
-};
-
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/admin/mint/history"
+      );
+      setHistory(res.data.data || []);
+    } catch (err) {
+      console.error("Fetch history error:", err);
+    }
+  };
 
   useEffect(() => {
     fetchHistory();
+    fetchTotalMinted();
   }, []);
 
+  /* ===============================
+     HANDLE MINT
+  =============================== */
   const handleMint = async () => {
     if (!wallet || !amount) {
       toast.error("Wallet & amount required");
@@ -46,7 +67,10 @@ const AdminMintTokens: React.FC = () => {
 
       setMintResult(res.data);
       toast.success("Mint successful!");
+
+      // refresh stats
       fetchHistory();
+      fetchTotalMinted();
 
       setWallet("");
       setAmount("");
@@ -58,14 +82,12 @@ const AdminMintTokens: React.FC = () => {
     }
   };
 
-  const totalMinted = history.reduce((a, b) => a + Number(b.amount), 0);
-
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Mint Tokens</h1>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* MINT FORM */}
+        {/* ================= MINT FORM ================= */}
         <div className="glass-card p-6 space-y-4">
           <h3 className="font-semibold flex gap-2 items-center">
             <Coins className="w-5 h-5 text-warning" />
@@ -116,18 +138,6 @@ const AdminMintTokens: React.FC = () => {
               <p>{mintResult.amount} tokens minted</p>
 
               <button
-                onClick={() =>
-                  window.open(
-                    `https://amoy.polygonscan.com/tx/${mintResult.txHash}`,
-                    "_blank"
-                  )
-                }
-                className="btn-secondary w-full flex justify-center gap-2"
-              >
-                <ExternalLink size={16} /> View on PolygonScan
-              </button>
-
-              <button
                 onClick={() => setMintResult(null)}
                 className="btn-primary w-full"
               >
@@ -137,38 +147,40 @@ const AdminMintTokens: React.FC = () => {
           )}
         </div>
 
-        {/* STATS */}
+        {/* ================= STATS ================= */}
         <div className="glass-card p-6 space-y-4">
           <h3 className="font-semibold">Token Statistics</h3>
 
+          {/* TOTAL MINTED (DB SYNC) */}
           <div className="flex justify-between bg-secondary/30 p-3 rounded-xl">
-            <span>Total Minted</span>
+            <span>Total Minted (System)</span>
             <b>₹{totalMinted}</b>
           </div>
 
+          {/* MINT HISTORY */}
           <div className="space-y-2">
             <h4 className="font-medium">Mint History</h4>
+
             <div className="max-h-60 overflow-y-auto space-y-2">
               {history.map((h) => (
                 <div
                   key={h.id}
-                  className="p-2 border rounded-lg text-xs"
+                  className="p-3 bg-secondary/20 rounded-lg text-sm"
                 >
-                  <div>Wallet: {h.student_wallet}</div>
-                  <div>Amount: {h.amount}</div>
-                  <div
-                    onClick={() =>
-                      window.open(
-                        `https://amoy.polygonscan.com/tx/${h.tx_hash}`,
-                        "_blank"
-                      )
-                    }
-                    className="text-primary cursor-pointer"
-                  >
-                    Tx: {h.tx_hash.slice(0, 20)}...
+                  <div className="font-mono text-xs break-all">
+                    {h.student_wallet}
+                  </div>
+                  <div className="font-semibold text-success mt-1">
+                    ₹{h.amount}
                   </div>
                 </div>
               ))}
+
+              {history.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center">
+                  No mint history found
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Send } from "lucide-react";
+import { Send, ExternalLink, CheckCircle } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
-
 const API_BASE = "http://localhost:5000/api";
+
+
 
 interface Vendor {
   id: number;
@@ -24,9 +25,10 @@ const StudentPay: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [fetchingBalance, setFetchingBalance] = useState(true);
 
+  const [txResult, setTxResult] = useState<any>(null);
+
   const quickAmounts = [50, 100, 200, 500];
 
-  /* ===== WALLET + BALANCE (OLD CONNECTION) ===== */
   const getWallet = async () => {
     try {
       const res = await fetch(`${API_BASE}/students/wallet/${user?.id}`);
@@ -40,7 +42,6 @@ const StudentPay: React.FC = () => {
     }
   };
 
-  /* ===== FETCH ALL VENDORS (OLD CONNECTION) ===== */
   const getVendors = async () => {
     try {
       const res = await fetch(`${API_BASE}/vendors/all`);
@@ -58,14 +59,10 @@ const StudentPay: React.FC = () => {
     }
   }, [user?.id]);
 
-  /* ===== PAY (OLD CONNECTION) ===== */
   const handlePay = async () => {
     if (!selectedVendor) return toast.error("Select Vendor");
-    if (!amount || Number(amount) <= 0)
-      return toast.error("Invalid amount");
-
-    if (Number(amount) > balance)
-      return toast.error("Insufficient balance");
+    if (!amount || Number(amount) <= 0) return toast.error("Invalid amount");
+    if (Number(amount) > balance) return toast.error("Insufficient balance");
 
     setLoading(true);
 
@@ -76,16 +73,15 @@ const StudentPay: React.FC = () => {
         body: JSON.stringify({
           studentWallet: wallet,
           vendorWallet: selectedVendor.wallet_address,
-          amount: Number(amount)
+          amount: Number(amount),
         }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      toast.success("Payment successful");
-      setAmount("");
-      setSelectedVendor(null);
+      setTxResult(data);
+      toast.success("Payment Successful!");
       getWallet();
 
     } catch (err: any) {
@@ -100,7 +96,7 @@ const StudentPay: React.FC = () => {
 
       <h1 className="text-2xl font-bold">Pay Vendor</h1>
 
-      {/* BALANCE CARD */}
+      {/* BALANCE */}
       <div className="glass-card p-6">
         <p className="text-sm text-muted-foreground">Available Balance</p>
         {fetchingBalance ? (
@@ -110,78 +106,104 @@ const StudentPay: React.FC = () => {
         )}
       </div>
 
-      {/* PAYMENT FULL BOX */}
+      {/* PAYMENT BOX */}
       <div className="glass-card p-10 space-y-8 w-full lg:min-h-[70vh]">
 
-        {/* VENDOR DROPDOWN */}
-        <div>
-          <label className="text-sm font-medium">Select Vendor</label>
-          <select
-            className="input-field mt-2"
-            value={selectedVendor?.id || ""}
-            onChange={(e) => {
-              const v = vendors.find(x => x.id === Number(e.target.value));
-              setSelectedVendor(v || null);
-            }}
-          >
-            <option value="">-- Select Vendor --</option>
-            {vendors.map(v => (
-              <option key={v.id} value={v.id}>
-                {v.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {!txResult ? (
+          <>
+            {/* VENDOR */}
+            <div>
+              <label className="text-sm font-medium">Select Vendor</label>
+              <select
+                className="input-field mt-2"
+                value={selectedVendor?.id || ""}
+                onChange={(e) => {
+                  const v = vendors.find(x => x.id === Number(e.target.value));
+                  setSelectedVendor(v || null);
+                }}
+              >
+                <option value="">-- Select Vendor --</option>
+                {vendors.map(v => (
+                  <option key={v.id} value={v.id}>
+                    {v.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        {/* AUTO WALLET */}
-        {selectedVendor && (
-          <div className="p-3 bg-secondary/30 rounded-xl">
-            <p className="text-xs text-muted-foreground">Vendor Wallet</p>
-            <p className="font-mono text-sm break-all">
-              {selectedVendor.wallet_address}
-            </p>
+            {selectedVendor && (
+              <div className="p-3 bg-secondary/30 rounded-xl">
+                <p className="text-xs text-muted-foreground">Vendor Wallet</p>
+                <p className="font-mono text-sm break-all">
+                  {selectedVendor.wallet_address}
+                </p>
+              </div>
+            )}
+
+            {/* AMOUNT */}
+            <div>
+              <label className="text-sm font-medium">Amount</label>
+              <input
+                type="number"
+                className="input-field mt-2"
+                placeholder="Enter amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+            </div>
+
+            {/* QUICK */}
+            <div className="flex gap-3 flex-wrap">
+              {quickAmounts.map((q) => (
+                <button
+                  key={q}
+                  onClick={() => setAmount(String(q))}
+                  className="btn-secondary"
+                >
+                  {q} KGCT
+                </button>
+              ))}
+            </div>
+
+            {/* PAY */}
+            <button
+              onClick={handlePay}
+              disabled={loading}
+              className="btn-primary w-full flex items-center justify-center gap-2 py-3 text-lg"
+            >
+              {loading ? <LoadingSpinner size="sm" /> : (
+                <>
+                  <Send className="w-5 h-5" /> Pay Now
+                </>
+              )}
+            </button>
+          </>
+        ) : (
+          /* SUCCESS BOX (ADMIN MINT மாதிரி) */
+          <div className="space-y-5 text-center">
+            <CheckCircle className="w-16 h-16 mx-auto text-success" />
+
+            <p className="text-xl font-bold">Payment Successful</p>
+            <p>{txResult.amount} KGCT transferred</p>
+
+            <button
+              onClick={() =>
+                window.open(txResult.explorer, "_blank")
+              }
+              className="btn-secondary w-full flex justify-center gap-2"
+            >
+              <ExternalLink size={16} />
+              View on Polygon Amoy
+            </button>
+
+            <button
+              onClick={() => setTxResult(null)}
+              className="btn-primary w-full"
+            >
+              Make Another Payment
+            </button>
           </div>
         )}
-
-        {/* AMOUNT */}
-        <div>
-          <label className="text-sm font-medium">Amount</label>
-          <input
-            type="number"
-            className="input-field mt-2"
-            placeholder="Enter amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-        </div>
-
-        {/* QUICK AMOUNTS */}
-        <div className="flex gap-3 flex-wrap">
-          {quickAmounts.map((q) => (
-            <button
-              key={q}
-              onClick={() => setAmount(String(q))}
-              className="btn-secondary"
-            >
-              {q} KGCT
-            </button>
-          ))}
-        </div>
-
-        {/* PAY BUTTON */}
-        <button
-          onClick={handlePay}
-          disabled={loading}
-          className="btn-primary w-full flex items-center justify-center gap-2 py-3 text-lg"
-        >
-          {loading ? (
-            <LoadingSpinner size="sm" />
-          ) : (
-            <>
-              <Send className="w-5 h-5" /> Pay Now
-            </>
-          )}
-        </button>
 
       </div>
     </div>

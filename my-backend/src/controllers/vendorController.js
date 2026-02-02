@@ -37,56 +37,7 @@ export const getVendorDashboard = async (req, res) => {
 
 
 /* ================= VENDOR → ADMIN SEND ================= */
-export const vendorSendAdmin = async (req, res) => {
-  const conn = await db.getConnection();
 
-  try {
-    const { vendorAddress, amount } = req.body;
-
-    const vendor = getAddress(vendorAddress);
-    const adminWallet = getAddress(process.env.ADMIN_WALLET);
-    const amt = Number(amount);
-
-    await conn.beginTransaction();
-
-    const [vendorRows] = await conn.query(
-      "SELECT id, balance FROM vendors WHERE wallet_address=?",
-      [vendor]
-    );
-
-    if (!vendorRows.length) {
-      throw new Error("Vendor not found");
-    }
-
-    const vendorId = vendorRows[0].id;
-    const vendorBalance = Number(vendorRows[0].balance);
-
-    if (vendorBalance < amt) {
-      throw new Error("Insufficient balance");
-    }
-
-    const tx = await studentPayVendor(vendor, adminWallet, amt);
-
-    await conn.query(
-      "UPDATE vendors SET balance = balance - ? WHERE id=?",
-      [amt, vendorId]
-    );
-
-    await conn.commit();
-
-    res.json({
-      success: true,
-      message: "Vendor sent tokens to admin",
-      txHash: tx.hash
-    });
-
-  } catch (err) {
-    await conn.rollback();
-    res.status(500).json({ error: err.message });
-  } finally {
-    conn.release();
-  }
-};
 
 export const getVendorTransactions = async (req, res) => {
   try {
@@ -151,5 +102,70 @@ export const getAllVendors = async (req, res) => {
   } catch (err) {
     console.error("getAllVendors error:", err);
     res.status(500).json({ error: err.message });
+  }
+};
+
+
+/* ================= GET VENDOR SETTINGS ================= */
+export const getVendorSettings = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const [rows] = await db.query(
+      `SELECT id, name, category, email, wallet_address, private_key, balance
+       FROM vendors
+       WHERE user_id = ?`,
+      [userId]
+    );
+
+    if (!rows.length) return res.status(404).json({ error: "Vendor not found" });
+
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* ================= VENDOR → ADMIN SEND ================= */
+export const vendorSendAdmin = async (req, res) => {
+  const conn = await db.getConnection();
+
+  try {
+    const { vendorAddress, amount } = req.body;
+
+    const vendor = getAddress(vendorAddress);
+    const adminWallet = getAddress(process.env.ADMIN_WALLET);
+    const amt = Number(amount);
+
+    await conn.beginTransaction();
+
+    const [[vendorRow]] = await conn.query(
+      "SELECT id, balance FROM vendors WHERE wallet_address=?",
+      [vendor]
+    );
+
+    if (!vendorRow) throw new Error("Vendor not found");
+    if (Number(vendorRow.balance) < amt) throw new Error("Insufficient balance");
+
+    const tx = await studentPayVendor(vendor, adminWallet, amt);
+
+    await conn.query(
+      "UPDATE vendors SET balance = balance - ? WHERE id=?",
+      [amt, vendorRow.id]
+    );
+
+    await conn.commit();
+
+    res.json({
+      success: true,
+      txHash: tx.hash,
+      message: "Sent to admin successfully"
+    });
+
+  } catch (err) {
+    await conn.rollback();
+    res.status(500).json({ error: err.message });
+  } finally {
+    conn.release();
   }
 };

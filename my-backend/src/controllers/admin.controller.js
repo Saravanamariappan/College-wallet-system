@@ -5,8 +5,11 @@ import bcrypt from "bcrypt";
 import {
   registerStudentOnChain,
   registerVendorOnChain,
-  mintToStudent
+  mintToStudent,
+  getPolBalance
 } from "../services/blockchainService.js";
+
+
 
 /* =========================================================
    CREATE STUDENT WALLET (ADMIN)
@@ -255,3 +258,87 @@ export const getMintHistory = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+/* =========================================================
+   ADMIN DASHBOARD OVERVIEW
+========================================================= */
+
+export const getAdminDashboard = async (req, res) => {
+  try {
+    /* ===============================
+       DATABASE STATS
+    =============================== */
+
+    const [[{ students }]] = await db.query(
+      "SELECT COUNT(*) AS students FROM students"
+    );
+
+    const [[{ vendors }]] = await db.query(
+      "SELECT COUNT(*) AS vendors FROM vendors"
+    );
+
+    const [[{ minted }]] = await db.query(
+      "SELECT IFNULL(SUM(amount),0) AS minted FROM mint_history"
+    );
+
+    const [[{ transactions }]] = await db.query(
+      "SELECT COUNT(*) AS transactions FROM `transactions`"
+    );
+
+    /* ===============================
+       ADMIN WALLET + POL BALANCE
+    =============================== */
+
+    const adminWallet = new Wallet(process.env.ADMIN_PRIVATE_KEY).address;
+    const polBalance = await getPolBalance(adminWallet);
+
+    
+
+
+    /* ===============================
+       RESPONSE
+    =============================== */
+
+    return res.json({
+      stats: {
+        students,
+        vendors,
+        minted,
+        transactions
+      },
+      admin: {
+        wallet: adminWallet,
+        polBalance
+      }
+    });
+
+  } catch (err) {
+    console.error("Admin dashboard error:", err);
+    return res.status(500).json({
+      message: "Dashboard error",
+      error: err.message
+    });
+  }
+};
+
+/* =========================================================
+   GET TOTAL MINTED (FOR MINT PAGE)
+========================================================= */
+export const getTotalMinted = async (req, res) => {
+  try {
+    const [[{ totalMinted }]] = await db.query(
+      "SELECT IFNULL(SUM(amount),0) AS totalMinted FROM mint_history"
+    );
+
+    res.json({
+      success: true,
+      totalMinted
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+

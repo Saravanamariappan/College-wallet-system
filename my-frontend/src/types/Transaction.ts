@@ -1,4 +1,4 @@
-export type TransactionStatus = 'SUCCESS' | 'FAILED';
+export type TransactionStatus = 'SUCCESS' | 'FAILED' | 'PENDING';
 
 export interface Transaction {
   id: number;

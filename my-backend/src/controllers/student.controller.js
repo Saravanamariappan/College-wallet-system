@@ -26,18 +26,16 @@ export const getStudentWallet = async (req, res) => {
 
     res.json({
       wallet: rows[0].wallet_address,
-      balance: Number(rows[0].balance)
+      balance: Number(rows[0].balance),
     });
-
   } catch (err) {
     console.error("getStudentWallet error:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-
 /* =========================================================
-   STUDENT → VENDOR PAYMENT (Wallet OR Name)
+   STUDENT → VENDOR PAYMENT + STORE TRANSACTION
 ========================================================= */
 export const payVendor = async (req, res) => {
   const conn = await db.getConnection();
@@ -53,9 +51,7 @@ export const payVendor = async (req, res) => {
     const vendor = getAddress(vendorWallet);
     const amt = Number(amount);
 
-    if (amt <= 0) {
-      return res.status(400).json({ error: "Invalid amount" });
-    }
+    if (amt <= 0) return res.status(400).json({ error: "Invalid amount" });
 
     await conn.beginTransaction();
 
@@ -78,8 +74,13 @@ export const payVendor = async (req, res) => {
 
     if (!vendorRows.length) throw new Error("Vendor not found");
 
+    /* BLOCKCHAIN TX */
     const tx = await studentPayVendor(student, vendor, amt);
 
+    /* 🔥 POLYGON AMOY EXPLORER */
+    const explorer = `https://amoy.polygonscan.com/tx/${tx.hash}`;
+
+    /* BALANCE UPDATE */
     await conn.query(
       "UPDATE students SET balance = balance - ? WHERE id=?",
       [amt, studentRows[0].id]
@@ -90,16 +91,35 @@ export const payVendor = async (req, res) => {
       [amt, vendorRows[0].id]
     );
 
+    /* TRANSACTION HISTORY */
+    await conn.query(
+      `INSERT INTO transactions 
+      (email, student_wallet, vendor_wallet, amount, tx_hash, explorer_link, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        studentRows[0].email,
+        student,
+        vendor,
+        amt,
+        tx.hash,
+        explorer,
+        "SUCCESS"
+      ]
+    );
+
     await conn.commit();
 
     res.json({
       success: true,
       txHash: tx.hash,
+      explorer,
+      amount: amt,
       message: "Payment successful"
     });
 
   } catch (err) {
     await conn.rollback();
+    console.error("Payment error:", err);
     res.status(400).json({ error: err.message });
   } finally {
     conn.release();
@@ -107,3 +127,23 @@ export const payVendor = async (req, res) => {
 };
 
 
+
+export const getStudentPrivateKey = async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+
+    const [rows] = await db.query(
+      "SELECT private_key FROM students WHERE user_id = ?",
+      [userId]
+    );
+
+    if (!rows.length) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    res.json({ privateKey: rows[0].private_key });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

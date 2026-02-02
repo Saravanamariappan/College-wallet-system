@@ -19,26 +19,45 @@ const abiPath = path.join(__dirname, "../config/abi.json");
 const abi = JSON.parse(fs.readFileSync(abiPath, "utf8"));
 
 /* ======================================================
-   PROVIDER
+   PROVIDER (FIXED)
 ====================================================== */
-const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+export const provider = new ethers.JsonRpcProvider(
+  process.env.RPC_URL,
+  {
+    name: "polygon-amoy",
+    chainId: 80002
+  },
+  {
+    staticNetwork: true,
+    polling: true,
+    pollingInterval: 4000,
+    timeout: 20000
+  }
+);
 
 /* ======================================================
-   WALLETS
+   WALLETS (SAFE INIT)
 ====================================================== */
-const admin = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
-const backend = new ethers.Wallet(process.env.BACKEND_PRIVATE_KEY, provider);
+export const admin = new ethers.Wallet(
+  process.env.ADMIN_PRIVATE_KEY,
+  provider
+);
+
+export const backend = new ethers.Wallet(
+  process.env.BACKEND_PRIVATE_KEY,
+  provider
+);
 
 /* ======================================================
    CONTRACT INSTANCES
 ====================================================== */
-const adminContract = new ethers.Contract(
+export const adminContract = new ethers.Contract(
   process.env.CONTRACT_ADDRESS,
   abi,
   admin
 );
 
-const backendContract = new ethers.Contract(
+export const backendContract = new ethers.Contract(
   process.env.CONTRACT_ADDRESS,
   abi,
   backend
@@ -50,23 +69,16 @@ const backendContract = new ethers.Contract(
 export async function registerStudentOnChain(wallet) {
   try {
     const student = getAddress(wallet);
-    console.log("🔵 Registering student:", student);
 
     const tx = await adminContract.registerStudent(student);
-    const receipt = await tx.wait();
+    await tx.wait();
 
-    console.log("✅ Student registered:", receipt.hash);
-    return receipt.hash;
-
+    return tx.hash;
   } catch (err) {
-    console.error("❌ registerStudent error:", err.reason || err.message);
-
     if (
       err.reason?.includes("Already student") ||
       err.message?.includes("Already student")
-    ) {
-      return "ALREADY";
-    }
+    ) return "ALREADY";
 
     throw err;
   }
@@ -78,23 +90,16 @@ export async function registerStudentOnChain(wallet) {
 export async function registerVendorOnChain(wallet) {
   try {
     const vendor = getAddress(wallet);
-    console.log("🔵 Registering vendor:", vendor);
 
     const tx = await adminContract.registerVendor(vendor);
-    const receipt = await tx.wait();
+    await tx.wait();
 
-    console.log("✅ Vendor registered:", receipt.hash);
-    return receipt.hash;
-
+    return tx.hash;
   } catch (err) {
-    console.error("❌ registerVendor error:", err.reason || err.message);
-
     if (
       err.reason?.includes("Already vendor") ||
       err.message?.includes("Already vendor")
-    ) {
-      return "ALREADY";
-    }
+    ) return "ALREADY";
 
     throw err;
   }
@@ -106,18 +111,13 @@ export async function registerVendorOnChain(wallet) {
 export async function mintToStudent(wallet, amount) {
   try {
     const student = getAddress(wallet);
-    console.log("🔵 Minting", amount, "tokens to:", student);
-
     const value = ethers.parseUnits(amount.toString(), 18);
 
     const tx = await adminContract.mint(student, value);
-    const receipt = await tx.wait();
+    await tx.wait();
 
-    console.log("✅ Mint success:", receipt.hash);
-    return receipt.hash;
-
+    return tx.hash;
   } catch (err) {
-    console.error("❌ mint error:", err.reason || err.message);
     throw err;
   }
 }
@@ -130,18 +130,13 @@ export async function studentPayVendor(student, vendor, amount) {
     const from = getAddress(student);
     const to = getAddress(vendor);
 
-    console.log("🔵 Spending:", amount, "from:", from, "to:", to);
-
     const value = ethers.parseUnits(amount.toString(), 18);
 
     const tx = await backendContract.studentSpend(from, to, value);
     await tx.wait();
 
-    console.log("✅ Spend success:", tx.hash);
-    return tx;   // 🔥 RETURN FULL TRANSACTION OBJECT
-
+    return tx.hash;
   } catch (err) {
-    console.error("❌ studentSpend error:", err.reason || err.message);
     throw err;
   }
 }
@@ -152,16 +147,26 @@ export async function studentPayVendor(student, vendor, amount) {
 export async function getTokenBalance(wallet) {
   try {
     const addr = getAddress(wallet);
-    console.log("🔵 Checking balance:", addr);
 
     const bal = await adminContract.balanceOf(addr);
-    const readable = ethers.formatUnits(bal, 18);
-
-    console.log("💰 Balance:", readable);
-    return readable;
-
+    return ethers.formatUnits(bal, 18);
   } catch (err) {
-    console.error("❌ balance error:", err.reason || err.message);
     return "0";
   }
 }
+
+/* ======================================================
+   GET POL BALANCE (FIXED)
+====================================================== */
+export async function getPolBalance(address) {
+  try {
+    if (!address) return "0";
+
+    const bal = await provider.getBalance(address);
+    return ethers.formatEther(bal);
+  } catch (err) {
+    return "0";
+  }
+}
+
+

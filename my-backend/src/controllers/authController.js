@@ -1,4 +1,4 @@
-import {db }from "../config/db.js";
+import { db } from "../config/db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -15,25 +15,36 @@ export const login = async (req, res) => {
       [email, role]
     );
 
-    if (rows.length === 0) {
-      return res.status(401).json({ message: "Invalid email or role" });
+    if (!rows.length) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const user = rows[0];
 
-    let isValid = false;
-
-    // ✅ bcrypt hash users
-    if (user.password.startsWith("$2")) {
-      isValid = await bcrypt.compare(password, user.password);
-    }
-    // ⚠️ old plain password users
-    else {
-      isValid = user.password === password;
-    }
+    const isValid = user.password.startsWith("$2")
+      ? await bcrypt.compare(password, user.password)
+      : user.password === password;
 
     if (!isValid) {
       return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    let walletAddress = null;
+
+    if (role === "STUDENT") {
+      const [s] = await db.query(
+        "SELECT wallet_address FROM students WHERE user_id=?",
+        [user.id]
+      );
+      walletAddress = s[0]?.wallet_address;
+    }
+
+    if (role === "VENDOR") {
+      const [v] = await db.query(
+        "SELECT wallet_address FROM vendors WHERE user_id=?",
+        [user.id]
+      );
+      walletAddress = v[0]?.wallet_address;
     }
 
     const token = jwt.sign(
@@ -47,8 +58,10 @@ export const login = async (req, res) => {
       token,
       user: {
         id: user.id,
+        name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        wallet_address: walletAddress
       }
     });
 

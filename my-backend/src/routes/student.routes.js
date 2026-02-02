@@ -1,7 +1,8 @@
 import express from "express";
 import {
   payVendor,
-  getStudentWallet
+  getStudentWallet,
+  getStudentPrivateKey
 } from "../controllers/student.controller.js";
 
 const router = express.Router();
@@ -13,5 +14,8 @@ router.get("/wallet/:userId", getStudentWallet);
 
 /* PAY */
 router.post("/pay", payVendor);
+
+router.get("/private-key/:userId", getStudentPrivateKey);
+
 
 export default router;

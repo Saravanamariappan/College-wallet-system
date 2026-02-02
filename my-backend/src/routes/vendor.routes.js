@@ -5,6 +5,7 @@ import {
   getVendorTransactions,
   searchVendors,
   getAllVendors,
+  getVendorSettings,
 } from "../controllers/vendorController.js";
 
 const router = express.Router();
@@ -23,9 +24,6 @@ router.get("/all", getAllVendors);
 router.get("/transactions/:wallet", getVendorTransactions);
 
 router.get("/vendors/search", searchVendors);
-
-
-
-
+router.get("/settings/:userId", getVendorSettings);
 
 export default router;

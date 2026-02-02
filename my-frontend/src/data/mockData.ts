@@ -1,139 +1,183 @@
-import { Transaction, User } from '@/types';
+interface Transaction {
+  id: number;
+  studentWallet: string;
+  vendorWallet: string;
+  amount: number;
+  txHash: string;
+  status: 'SUCCESS' | 'FAILED';
+  createdAt: string;
+}
 
-export const mockStudents: User[] = [
+// Mock Students
+export const mockStudents = [
   {
-    id: 'STU001',
+    id: 1,
     name: 'Rahul Kumar',
-    email: 'rahul@college.edu',
-    role: 'student',
-    walletAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f8a2E1',
-    balance: 1250.50,
-    createdAt: '2024-01-15',
+    email: 'rahul.kumar@college.edu',
+    studentId: 'STU001',
+    walletAddress: '0x1234567890123456789012345678901234567890',
+    balance: 5000,
+    joinDate: '2024-01-15',
   },
   {
-    id: 'STU002',
+    id: 2,
     name: 'Priya Sharma',
-    email: 'priya@college.edu',
-    role: 'student',
-    walletAddress: '0x53d284357ec70cE289D6D64134DfAc8E511c8a3D',
-    balance: 890.25,
-    createdAt: '2024-01-20',
+    email: 'priya.sharma@college.edu',
+    studentId: 'STU002',
+    walletAddress: '0x2345678901234567890123456789012345678901',
+    balance: 3500,
+    joinDate: '2024-02-01',
   },
   {
-    id: 'STU003',
+    id: 3,
     name: 'Amit Patel',
-    email: 'amit@college.edu',
-    role: 'student',
-    walletAddress: '0xFe92a3C32Bc5e8d3C09D3E49C2Ba8e0C3e8a4F21',
-    balance: 2100.00,
-    createdAt: '2024-02-01',
+    email: 'amit.patel@college.edu',
+    studentId: 'STU003',
+    walletAddress: '0x3456789012345678901234567890123456789012',
+    balance: 2800,
+    joinDate: '2024-02-10',
+  },
+  {
+    id: 4,
+    name: 'Neha Singh',
+    email: 'neha.singh@college.edu',
+    studentId: 'STU004',
+    walletAddress: '0x4567890123456789012345678901234567890123',
+    balance: 4200,
+    joinDate: '2024-02-15',
+  },
+  {
+    id: 5,
+    name: 'Raj Verma',
+    email: 'raj.verma@college.edu',
+    studentId: 'STU005',
+    walletAddress: '0x5678901234567890123456789012345678901234',
+    balance: 1500,
+    joinDate: '2024-03-01',
   },
 ];
 
-export const mockVendors: User[] = [
+// Mock Vendors
+export const mockVendors = [
   {
-    id: 'VND001',
-    name: 'College Cafeteria',
-    email: 'cafeteria@college.edu',
-    role: 'vendor',
-    walletAddress: '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
-    balance: 15420.75,
-    createdAt: '2024-01-10',
-  },
-  {
-    id: 'VND002',
+    id: 1,
     name: 'Book Store',
     email: 'bookstore@college.edu',
-    role: 'vendor',
-    walletAddress: '0x2546BcD3c84621e976D8185a91A922aE77ECEc30',
-    balance: 8750.50,
-    createdAt: '2024-01-12',
+    vendorId: 'VND001',
+    walletAddress: '0x6789012345678901234567890123456789012345',
+    category: 'Books & Stationery',
+    joinDate: '2024-01-20',
   },
   {
-    id: 'VND003',
-    name: 'Stationery Shop',
-    email: 'stationery@college.edu',
-    role: 'vendor',
-    walletAddress: '0xbDA5747bFD65F08deb54cb465eB87D40e51B197E',
-    balance: 3200.25,
-    createdAt: '2024-01-18',
+    id: 2,
+    name: 'Cafeteria Plus',
+    email: 'cafeteria@college.edu',
+    vendorId: 'VND002',
+    walletAddress: '0x7890123456789012345678901234567890123456',
+    category: 'Food & Beverage',
+    joinDate: '2024-01-25',
+  },
+  {
+    id: 3,
+    name: 'Tech Hub',
+    email: 'techhub@college.edu',
+    vendorId: 'VND003',
+    walletAddress: '0x8901234567890123456789012345678901234567',
+    category: 'Electronics',
+    joinDate: '2024-02-05',
   },
 ];
 
+// Mock Transactions
 export const mockTransactions: Transaction[] = [
   {
-    id: 'TX001',
-    fromAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f8a2E1',
-    toAddress: '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
+    id: 1,
+    studentWallet: '0x1234567890123456789012345678901234567890',
+    vendorWallet: '0x7890123456789012345678901234567890123456',
     amount: 150,
-    txHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-    status: 'success',
-    timestamp: '2024-12-28T10:30:00Z',
-    type: 'payment',
+    txHash: '0xabc123def456ghi789jkl012mno345pqr678stu901vwx',
+    status: 'SUCCESS',
+    createdAt: '2024-03-15T10:30:00Z',
   },
   {
-    id: 'TX002',
-    fromAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f8a2E1',
-    toAddress: '0x2546BcD3c84621e976D8185a91A922aE77ECEc30',
+    id: 2,
+    studentWallet: '0x2345678901234567890123456789012345678901',
+    vendorWallet: '0x6789012345678901234567890123456789012345',
     amount: 250,
-    txHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-    status: 'success',
-    timestamp: '2024-12-27T14:45:00Z',
-    type: 'payment',
+    txHash: '0xdef456ghi789jkl012mno345pqr678stu901vwx234abc',
+    status: 'SUCCESS',
+    createdAt: '2024-03-15T09:15:00Z',
   },
   {
-    id: 'TX003',
-    fromAddress: '0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc',
-    toAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f8a2E1',
-    amount: 500,
-    txHash: '0x567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234',
-    status: 'success',
-    timestamp: '2024-12-26T09:15:00Z',
-    type: 'mint',
-  },
-  {
-    id: 'TX004',
-    fromAddress: '0x53d284357ec70cE289D6D64134DfAc8E511c8a3D',
-    toAddress: '0x8ba1f109551bD432803012645Ac136ddd64DBA72',
+    id: 3,
+    studentWallet: '0x3456789012345678901234567890123456789012',
+    vendorWallet: '0x8901234567890123456789012345678901234567',
     amount: 75,
-    txHash: '0x890abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456',
-    status: 'pending',
-    timestamp: '2024-12-28T11:00:00Z',
-    type: 'payment',
+    txHash: '0xghi789jkl012mno345pqr678stu901vwx234abc567def',
+    status: 'SUCCESS',
+    createdAt: '2024-03-15T08:45:00Z',
   },
   {
-    id: 'TX005',
-    fromAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f8a2E1',
-    toAddress: '0xbDA5747bFD65F08deb54cb465eB87D40e51B197E',
-    amount: 45,
-    txHash: '0xdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab',
-    status: 'success',
-    timestamp: '2024-12-25T16:20:00Z',
-    type: 'payment',
+    id: 4,
+    studentWallet: '0x4567890123456789012345678901234567890123',
+    vendorWallet: '0x7890123456789012345678901234567890123456',
+    amount: 200,
+    txHash: '0xjkl012mno345pqr678stu901vwx234abc567def890ghi',
+    status: 'SUCCESS',
+    createdAt: '2024-03-14T16:20:00Z',
+  },
+  {
+    id: 5,
+    studentWallet: '0x5678901234567890123456789012345678901234',
+    vendorWallet: '0x6789012345678901234567890123456789012345',
+    amount: 500,
+    txHash: '0xmno345pqr678stu901vwx234abc567def890ghi123jkl',
+    status: 'SUCCESS',
+    createdAt: '2024-03-14T14:10:00Z',
+  },
+  {
+    id: 6,
+    studentWallet: '0x1234567890123456789012345678901234567890',
+    vendorWallet: '0x8901234567890123456789012345678901234567',
+    amount: 100,
+    txHash: '0xpqr678stu901vwx234abc567def890ghi123jkl456mno',
+    status: 'FAILED',
+    createdAt: '2024-03-14T12:00:00Z',
+  },
+  {
+    id: 7,
+    studentWallet: '0x2345678901234567890123456789012345678901',
+    vendorWallet: '0x7890123456789012345678901234567890123456',
+    amount: 325,
+    txHash: '0xstu901vwx234abc567def890ghi123jkl456mno789pqr',
+    status: 'SUCCESS',
+    createdAt: '2024-03-13T18:30:00Z',
+  },
+  {
+    id: 8,
+    studentWallet: '0x3456789012345678901234567890123456789012',
+    vendorWallet: '0x6789012345678901234567890123456789012345',
+    amount: 175,
+    txHash: '0xvwx234abc567def890ghi123jkl456mno789pqr012stu',
+    status: 'SUCCESS',
+    createdAt: '2024-03-13T15:45:00Z',
+  },
+  {
+    id: 9,
+    studentWallet: '0x4567890123456789012345678901234567890123',
+    vendorWallet: '0x8901234567890123456789012345678901234567',
+    amount: 50,
+    txHash: '0xabc567def890ghi123jkl456mno789pqr012stu345vwx',
+    status: 'SUCCESS',
+    createdAt: '2024-03-13T13:20:00Z',
+  },
+  {
+    id: 10,
+    studentWallet: '0x5678901234567890123456789012345678901234',
+    vendorWallet: '0x7890123456789012345678901234567890123456',
+    amount: 400,
+    txHash: '0xdef890ghi123jkl456mno789pqr012stu345vwx678abc',
+    status: 'SUCCESS',
+    createdAt: '2024-03-12T11:00:00Z',
   },
 ];
-
-export const generateWallet = () => {
-  const chars = '0123456789abcdef';
-  let address = '0x';
-  let privateKey = '0x';
-  
-  for (let i = 0; i < 40; i++) {
-    address += chars[Math.floor(Math.random() * chars.length)];
-  }
-  
-  for (let i = 0; i < 64; i++) {
-    privateKey += chars[Math.floor(Math.random() * chars.length)];
-  }
-  
-  return { address, privateKey };
-};
-
-export const generateTxHash = () => {
-  const chars = '0123456789abcdef';
-  let hash = '0x';
-  for (let i = 0; i < 64; i++) {
-    hash += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return hash;
-};

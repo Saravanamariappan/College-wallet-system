@@ -181,9 +181,7 @@ const Login: React.FC = () => {
               </button>
             </form>
 
-            <p className="text-center text-sm text-muted-foreground mt-6">
-              Demo: student@gmail.com / 1234
-            </p>
+            
           </div>
         </div>
       </div>

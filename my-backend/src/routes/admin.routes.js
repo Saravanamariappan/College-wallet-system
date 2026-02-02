@@ -7,9 +7,12 @@ import {
   mintTokens,
   getAllStudents,
   getAllVendors,
-  getMintHistory
+  getMintHistory,
+  getAdminDashboard,
+  getTotalMinted
 } from "../controllers/admin.controller.js";
 
+import { getAllTransactions } from "../controllers/transaction.controller.js";
 const router = express.Router();
 
 /* WALLET CREATE */
@@ -27,5 +30,10 @@ router.get("/mint/history", getMintHistory);
 /* GET ALL STUDENTS & VENDORS */
 router.get("/students", getAllStudents);
 router.get("/vendors", getAllVendors);
+
+router.get("/dashboard", getAdminDashboard);
+
+router.get("/mint/total", getTotalMinted);
+router.get("/transactions", getAllTransactions);
 
 export default router;

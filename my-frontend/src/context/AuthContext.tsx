@@ -14,8 +14,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (saved) {
       const parsed = JSON.parse(saved);
-      console.log("Loaded user:", parsed);
-
       setUser(parsed);
       setAuth(true);
     }
@@ -38,12 +36,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("LOGIN API RESPONSE:", data);
 
       const fixedUser = {
-        id: data.user.id || data.user.user_id,
-        name: data.user.name,
-        email: data.user.email,
-        role: data.user.role,
-      };
-
+          id: data.user.id,
+          name: data.user.name,
+          email: data.user.email,
+          role: data.user.role,
+          walletAddress: data.user.wallet_address
+        };
       console.log("FINAL USER:", fixedUser);
 
       setUser(fixedUser);

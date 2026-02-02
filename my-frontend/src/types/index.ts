@@ -1,20 +1,29 @@
-// ================= USER ROLE =================
+// USER
 export type UserRole = 'student' | 'vendor' | 'admin';
 
-// ================= USER ======================
 export interface User {
   id: number;
   email: string;
   role: UserRole;
-
-  // wallet related (optional – backend irundha varum)
   walletAddress?: string;
   privateKey?: string;
   balance?: number;
 }
 
-// ================= AUTH STATE =================
 export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
+}
+
+// TRANSACTION
+export type TransactionStatus = 'SUCCESS' | 'FAILED' | 'PENDING';
+
+export interface Transaction {
+  id: number;
+  studentWallet: string;
+  vendorWallet: string;
+  amount: number;
+  txHash: string;
+  status: TransactionStatus;
+  createdAt: string;
 }

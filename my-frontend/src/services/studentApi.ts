@@ -17,3 +17,7 @@ export const payVendor = (data: {
 export const getStudentBalance = (address: string) => {
   return axios.get(`${API}/balance/${address}`);
 };
+
+export const getStudentPrivateKey = async (userId: number) => {
+  return axios.get(`http://localhost:5000/api/students/private-key/${userId}`);
+};

@@ -14,7 +14,6 @@ import StudentSettings from "./pages/student/StudentSettings";
 
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -109,7 +108,7 @@ const AppRoutes = () => {
         }
       />
 
-      <Route path="*" element={<NotFound />} />
+       
     </Routes>
   );
 };
