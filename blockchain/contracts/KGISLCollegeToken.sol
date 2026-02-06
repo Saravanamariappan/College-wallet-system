@@ -6,7 +6,7 @@ contract KGISLCollegeToken {
     /* ================= METADATA ================= */
     string public name = "KGISL College Token";
     string public symbol = "KGCT";
-    uint8 public decimals = 18;
+    uint8 public decimals = 0;
     uint256 public totalSupply;
 
     /* ================= ROLES ================= */
@@ -117,4 +117,22 @@ contract KGISLCollegeToken {
     function getBalance(address user) external view returns (uint256) {
         return balanceOf[user];
     }
+    function adminSendToStudent(
+    address student,
+    uint256 amount
+) external onlyAdmin {
+
+    require(isStudent[student], "Not student");
+    require(amount > 0, "Invalid amount");
+
+    uint256 tokens = amount * (10 ** decimals);
+    require(balanceOf[admin] >= tokens, "Admin insufficient balance");
+
+    balanceOf[admin] -= tokens;
+    balanceOf[student] += tokens;
+
+    emit Transfer(admin, student, tokens);
 }
+
+}
+

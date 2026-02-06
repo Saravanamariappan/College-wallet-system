@@ -75,10 +75,10 @@ export const payVendor = async (req, res) => {
     if (!vendorRows.length) throw new Error("Vendor not found");
 
     /* BLOCKCHAIN TX */
-    const tx = await studentPayVendor(student, vendor, amt);
+    const txHash = await studentPayVendor(student, vendor, amt);
 
-    /* 🔥 POLYGON AMOY EXPLORER */
-    const explorer = `https://amoy.polygonscan.com/tx/${tx.hash}`;
+    const explorer = `https://amoy.polygonscan.com/tx/${txHash}`;
+
 
     /* BALANCE UPDATE */
     await conn.query(
@@ -101,7 +101,7 @@ export const payVendor = async (req, res) => {
         student,
         vendor,
         amt,
-        tx.hash,
+        txHash,
         explorer,
         "SUCCESS"
       ]
@@ -111,7 +111,7 @@ export const payVendor = async (req, res) => {
 
     res.json({
       success: true,
-      txHash: tx.hash,
+      txHash: txHash,
       explorer,
       amount: amt,
       message: "Payment successful"
@@ -147,3 +147,4 @@ export const getStudentPrivateKey = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+

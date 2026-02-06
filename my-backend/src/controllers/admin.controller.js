@@ -2,11 +2,13 @@ import { db } from "../config/db.js";
 import { Wallet, getAddress, isAddress } from "ethers";
 import bcrypt from "bcrypt";
 
+
 import {
   registerStudentOnChain,
   registerVendorOnChain,
   mintToStudent,
-  getPolBalance
+  getPolBalance,
+  getTokenBalance
 } from "../services/blockchainService.js";
 
 
@@ -265,10 +267,7 @@ export const getMintHistory = async (req, res) => {
 
 export const getAdminDashboard = async (req, res) => {
   try {
-    /* ===============================
-       DATABASE STATS
-    =============================== */
-
+    /* ================= COUNTS ================= */
     const [[{ students }]] = await db.query(
       "SELECT COUNT(*) AS students FROM students"
     );
@@ -281,46 +280,74 @@ export const getAdminDashboard = async (req, res) => {
       "SELECT IFNULL(SUM(amount),0) AS minted FROM mint_history"
     );
 
-    const [[{ transactions }]] = await db.query(
-      "SELECT COUNT(*) AS transactions FROM `transactions`"
-    );
+    const [[{ transactions }]] = await db.query(`
+      SELECT 
+        (SELECT COUNT(*) FROM mint_history) +
+        (SELECT COUNT(*) FROM admin_transactions) +
+        (SELECT COUNT(*) FROM vendor_admin_transactions)
+        AS transactions
+    `);
 
-    /* ===============================
-       ADMIN WALLET + POL BALANCE
-    =============================== */
+    const [[{ vendorPayments }]] = await db.query(`
+      SELECT IFNULL(SUM(amount), 0) AS vendorPayments
+      FROM vendor_admin_transactions
+    `);
 
-    const adminWallet = new Wallet(process.env.ADMIN_PRIVATE_KEY).address;
-    const polBalance = await getPolBalance(adminWallet);
+    /* ================= ADMIN WALLET (NO BLOCKCHAIN CALL) ================= */
+    if (!process.env.ADMIN_PRIVATE_KEY) {
+      return res.status(500).json({
+        error: "ADMIN_PRIVATE_KEY not set"
+      });
+    }
 
-    
-
-
-    /* ===============================
-       RESPONSE
-    =============================== */
+    const adminWallet = new Wallet(
+      process.env.ADMIN_PRIVATE_KEY
+    ).address;
 
     return res.json({
+      success: true,
       stats: {
         students,
         vendors,
         minted,
-        transactions
+        transactions,
+        vendorPayments
       },
       admin: {
-        wallet: adminWallet,
-        polBalance
+        wallet: adminWallet
       }
     });
 
   } catch (err) {
     console.error("Admin dashboard error:", err);
-    return res.status(500).json({
+    res.status(500).json({
       message: "Dashboard error",
       error: err.message
     });
   }
 };
 
+/* ================= ADMIN WALLET BALANCE (ON DEMAND) ================= */
+
+export const getAdminWalletBalance = async (req, res) => {
+  try {
+    const adminWallet = new Wallet(
+      process.env.ADMIN_PRIVATE_KEY
+    ).address;
+
+    const polBalance = await getPolBalance(adminWallet);
+    const tokenBalance = await getTokenBalance(adminWallet);
+
+    res.json({
+      wallet: adminWallet,
+      polBalance,
+      tokenBalance
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 /* =========================================================
    GET TOTAL MINTED (FOR MINT PAGE)
 ========================================================= */
@@ -340,5 +367,103 @@ export const getTotalMinted = async (req, res) => {
 };
 
 
+/* =========================================================
+   GET VENDOR → ADMIN PAYMENT HISTORY
+========================================================= */
+export const getVendorAdminTransactions = async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT
+        vat.id,
+        v.name AS vendor_name,
+        vat.vendor_wallet,
+        vat.amount,
+        vat.tx_hash,
+        vat.created_at
+      FROM vendor_admin_transactions vat
+      JOIN vendors v ON v.id = vat.vendor_id
+      ORDER BY vat.id DESC
+    `);
 
+    res.json({
+      success: true,
+      transactions: rows
+    });
+
+  } catch (err) {
+    console.error("getVendorAdminTransactions error:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const adminSendTokens = async (req, res) => {
+  try {
+    const { walletAddress, amount } = req.body;
+    if (!walletAddress || !amount)
+      return res.status(400).json({ error: "Required fields missing" });
+
+    const wallet = getAddress(walletAddress);
+
+    // Mint on-chain
+    const txHash = await mintToStudent(wallet, amount);
+
+    // Update student OR vendor
+    const [student] = await db.query(
+      "SELECT id FROM students WHERE wallet_address=?",
+      [wallet]
+    );
+
+    if (student.length > 0) {
+      await db.query(
+        "UPDATE students SET balance = balance + ? WHERE wallet_address=?",
+        [amount, wallet]
+      );
+
+      await db.query(
+        `INSERT INTO admin_transactions (receiver_wallet, amount, type, tx_hash)
+         VALUES (?, ?, 'STUDENT', ?)`,
+        [wallet, amount, txHash]
+      );
+    } else {
+      await db.query(
+        "UPDATE vendors SET balance = balance + ? WHERE wallet_address=?",
+        [amount, wallet]
+      );
+
+      await db.query(
+        `INSERT INTO admin_transactions (receiver_wallet, amount, type, tx_hash)
+         VALUES (?, ?, 'VENDOR', ?)`,
+        [wallet, amount, txHash]
+      );
+    }
+
+    res.json({ success: true, txHash });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* =========================================================
+   ADMIN SEND HISTORY
+========================================================= */
+export const getAdminSendHistory = async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT id, receiver_wallet, amount, type, tx_hash, created_at
+      FROM admin_transactions
+      ORDER BY id DESC
+    `);
+
+    res.json({
+      success: true,
+      history: rows
+    });
+
+  } catch (err) {
+    console.error("getAdminSendHistory error:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
 

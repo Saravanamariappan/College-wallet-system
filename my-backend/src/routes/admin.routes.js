@@ -9,7 +9,10 @@ import {
   getAllVendors,
   getMintHistory,
   getAdminDashboard,
-  getTotalMinted
+  getTotalMinted,
+  getVendorAdminTransactions,
+  getAdminSendHistory,
+  getAdminWalletBalance
 } from "../controllers/admin.controller.js";
 
 import { getAllTransactions } from "../controllers/transaction.controller.js";
@@ -35,5 +38,11 @@ router.get("/dashboard", getAdminDashboard);
 
 router.get("/mint/total", getTotalMinted);
 router.get("/transactions", getAllTransactions);
+router.get("/vendor-admin-transactions", getVendorAdminTransactions);
+
+router.get("/send-history", getAdminSendHistory);
+
+
+router.get("/wallet-balance", getAdminWalletBalance);
 
 export default router;
