@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Wallet, ArrowDownLeft, History, Settings } from 'lucide-react';
+import { Wallet, ArrowDownLeft, History, Settings, ArrowUp, ArrowUpRight } from 'lucide-react';
 import BottomNav from '@/components/layout/BottomNav';
 import DesktopSidebar from '@/components/layout/DesktopSidebar';
 import MobileHeader from '@/components/layout/MobileHeader';
@@ -13,7 +13,7 @@ const VendorDashboard: React.FC = () => {
 
   const tabs = [
     { id: 'wallet', label: 'Wallet', icon: <Wallet className="w-5 h-5" /> },
-    { id: 'receive', label: 'Receive', icon: <ArrowDownLeft className="w-5 h-5" /> },
+    { id: 'receive', label: 'Send', icon: <ArrowUpRight className="w-5 h-5" /> },
     { id: 'history', label: 'History', icon: <History className="w-5 h-5" /> },
     { id: 'settings', label: 'Settings', icon: <Settings className="w-5 h-5" /> },
   ];

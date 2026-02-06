@@ -1,108 +1,189 @@
-import React, { useState } from 'react';
-import { QrCode, Copy, Check, Share2 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { toast } from 'sonner';
+import React, { useEffect, useState } from "react";
+import { Send, ExternalLink, CheckCircle } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { toast } from "sonner";
 
-const VendorReceive: React.FC = () => {
+const API_BASE = "http://localhost:5000/api";
+const EXPLORER = "https://amoy.polygonscan.com/tx/";
+
+interface History {
+  id: number;
+  admin_wallet: string;
+  amount: number;
+  tx_hash: string;
+  created_at: string;
+}
+
+const VendorPayAdmin: React.FC = () => {
   const { user } = useAuth();
-  const [copied, setCopied] = useState(false);
-  const [amount, setAmount] = useState('');
 
-  const copyAddress = async () => {
-    await navigator.clipboard.writeText(user?.walletAddress || '');
-    setCopied(true);
-    toast.success('Address copied!');
-    setTimeout(() => setCopied(false), 2000);
+  const [vendorWallet, setVendorWallet] = useState("");
+  const [balance, setBalance] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [history, setHistory] = useState<History[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  /* ================= LOAD DASHBOARD ================= */
+  const loadDashboard = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/vendors/dashboard/${user?.id}`);
+      if (!res.ok) throw new Error();
+
+      const data = await res.json();
+      setVendorWallet(data.wallet);
+      setBalance(Number(data.balance) || 0);
+    } catch {
+      toast.error("Failed to load vendor balance");
+    }
   };
 
-  const shareAddress = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: user?.name,
-          text: `Pay to ${user?.name}`,
-          url: `polygon:${user?.walletAddress}${amount ? `?amount=${amount}` : ''}`,
-        });
-      } catch (err) {
-        console.log('Share cancelled');
-      }
-    } else {
-      copyAddress();
+  /* ================= LOAD HISTORY ================= */
+  const loadHistory = async (wallet: string) => {
+    try {
+      const res = await fetch(
+        `${API_BASE}/vendors/admin-transactions/${wallet}`
+      );
+      if (!res.ok) throw new Error();
+
+      const data = await res.json();
+      setHistory(data.history || []);
+    } catch {
+      toast.error("Failed to load history");
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) loadDashboard();
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (vendorWallet) loadHistory(vendorWallet);
+  }, [vendorWallet]);
+
+  /* ================= PAY ADMIN ================= */
+  const handlePay = async () => {
+    if (!amount || Number(amount) <= 0)
+      return toast.error("Invalid amount");
+
+    if (Number(amount) > balance)
+      return toast.error("Insufficient balance");
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${API_BASE}/vendors/pay-admin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          vendorWallet,
+          amount: Number(amount),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      const link = `${EXPLORER}${data.txHash}`;
+
+      /* ✅ SMALL SUCCESS CARD (like image) */
+      toast.custom(() => (
+        <div className="bg-background border border-green-500/30 rounded-xl p-4 w-[320px] text-center space-y-2">
+          <CheckCircle className="mx-auto text-green-400" size={32} />
+          <p className="font-semibold">Payment Successful</p>
+          <p className="text-sm text-muted-foreground">
+            {data.amount} KGCT transferred
+          </p>
+
+          <a
+            href={link}
+            target="_blank"
+            className="block bg-secondary/40 rounded-lg py-2 text-sm hover:bg-secondary/60"
+          >
+            View on Polygon Amoy
+          </a>
+        </div>
+      ));
+
+      setAmount("");
+      await loadDashboard();
+      await loadHistory(vendorWallet);
+
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-bold mb-1">Receive Payment</h1>
-        <p className="text-muted-foreground">Share your wallet to receive tokens</p>
-      </div>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Vendor → Admin Payment</h1>
 
-      {/* QR Code Card */}
-      <div className="glass-card-glow p-6 lg:p-8 text-center">
-        <div className="relative z-10">
-          <div className="w-48 h-48 mx-auto mb-6 bg-white rounded-2xl p-4 flex items-center justify-center">
-            <QrCode className="w-full h-full text-background" />
+      <div className="grid lg:grid-cols-2 gap-6">
+
+        {/* LEFT */}
+        <div className="glass-card p-6 space-y-4">
+          <div className="flex justify-between bg-secondary/30 p-3 rounded-xl">
+            <span>Balance</span>
+            <b>{balance} KGCT</b>
           </div>
 
-          <h3 className="font-semibold text-lg mb-2">{user?.name}</h3>
-          <p className="font-mono text-sm text-muted-foreground break-all mb-4">
-            {user?.walletAddress}
-          </p>
+          <input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="input-field"
+            placeholder="Enter amount"
+          />
 
-          <div className="flex gap-3 justify-center">
-            <button
-              onClick={copyAddress}
-              className="btn-secondary px-6 py-3 flex items-center gap-2"
-            >
-              {copied ? <Check className="w-5 h-5 text-success" /> : <Copy className="w-5 h-5" />}
-              <span>{copied ? 'Copied!' : 'Copy'}</span>
-            </button>
-            <button
-              onClick={shareAddress}
-              className="btn-primary px-6 py-3 flex items-center gap-2"
-            >
-              <Share2 className="w-5 h-5" />
-              <span>Share</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Request Amount */}
-      <div className="glass-card p-4 lg:p-6">
-        <h3 className="font-semibold mb-4">Request Specific Amount</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm text-muted-foreground mb-2">Amount (Optional)</label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="Enter amount"
-              className="input-field w-full"
-            />
-          </div>
           <button
-            onClick={shareAddress}
-            className="btn-primary w-full py-3"
+            onClick={handlePay}
+            disabled={loading}
+            className="btn-primary w-full flex items-center justify-center gap-2"
           >
-            Generate Payment Request
+            {loading ? <LoadingSpinner size="sm" /> : <Send size={16} />}
+            Pay Admin
           </button>
         </div>
-      </div>
 
-      {/* Tips */}
-      <div className="glass-card p-4 lg:p-6 bg-primary/5 border-primary/20">
-        <h4 className="font-medium mb-2 text-primary">💡 Tips</h4>
-        <ul className="text-sm text-muted-foreground space-y-1">
-          <li>• Show QR code to customers for quick payments</li>
-          <li>• Payments are instant and verified on blockchain</li>
-          <li>• All transactions can be verified on PolygonScan</li>
-        </ul>
+        {/* RIGHT – COMPACT HISTORY (like image) */}
+        <div className="glass-card p-4 space-y-2">
+          <h3 className="font-semibold">Payment History</h3>
+
+          {history.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center">
+              No history found
+            </p>
+          )}
+
+          {history.map((h) => (
+            <div
+              key={h.id}
+              className="flex items-center justify-between bg-secondary/20 px-3 py-2 rounded-lg"
+            >
+              <div>
+                <p className="text-sm font-medium">{h.amount} KGCT</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {new Date(h.created_at).toLocaleString()}
+                </p>
+              </div>
+
+              {/* VERIFY ICON */}
+              <a
+                href={`${EXPLORER}${h.tx_hash}`}
+                target="_blank"
+                className="text-blue-400 hover:text-blue-300"
+              >
+                <ExternalLink size={16} />
+              </a>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );
 };
 
-export default VendorReceive;
+export default VendorPayAdmin;
