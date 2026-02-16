@@ -6,7 +6,7 @@ contract KGISLCollegeToken {
     /* ================= METADATA ================= */
     string public name = "KGISL College Token";
     string public symbol = "KGCT";
-    uint8 public decimals = 0;
+    uint8 public decimals = 18;
     uint256 public totalSupply;
 
     /* ================= ROLES ================= */
@@ -45,22 +45,28 @@ contract KGISLCollegeToken {
     /* ================= ADMIN FUNCTIONS ================= */
 
     function registerStudent(address student) external onlyAdmin {
+
         require(student != address(0), "Invalid address");
         require(!isStudent[student], "Already student");
 
         isStudent[student] = true;
+
         emit StudentRegistered(student);
     }
 
     function registerVendor(address vendor) external onlyAdmin {
+
         require(vendor != address(0), "Invalid address");
         require(!isVendor[vendor], "Already vendor");
 
         isVendor[vendor] = true;
+
         emit VendorRegistered(vendor);
     }
 
+    /* ADMIN MINT NEW TOKENS */
     function mint(address student, uint256 amount) external onlyAdmin {
+
         require(isStudent[student], "Not student");
         require(amount > 0, "Invalid amount");
 
@@ -70,6 +76,25 @@ contract KGISLCollegeToken {
         totalSupply += tokens;
 
         emit Mint(student, tokens);
+    }
+
+    /* ADMIN SEND EXISTING TOKENS */
+    function adminSendToStudent(
+        address student,
+        uint256 amount
+    ) external onlyAdmin {
+
+        require(isStudent[student], "Not student");
+        require(amount > 0, "Invalid amount");
+
+        uint256 tokens = amount * (10 ** decimals);
+
+        require(balanceOf[admin] >= tokens, "Admin insufficient balance");
+
+        balanceOf[admin] -= tokens;
+        balanceOf[student] += tokens;
+
+        emit Transfer(admin, student, tokens);
     }
 
     /* ================= STUDENT → VENDOR ================= */
@@ -82,9 +107,9 @@ contract KGISLCollegeToken {
 
         require(isStudent[student], "Invalid student");
         require(isVendor[vendor], "Invalid vendor");
-        require(amount > 0, "Invalid amount");
 
         uint256 tokens = amount * (10 ** decimals);
+
         require(balanceOf[student] >= tokens, "Insufficient balance");
 
         balanceOf[student] -= tokens;
@@ -101,9 +126,9 @@ contract KGISLCollegeToken {
     ) external onlyBackend {
 
         require(isVendor[vendor], "Invalid vendor");
-        require(amount > 0, "Invalid amount");
 
         uint256 tokens = amount * (10 ** decimals);
+
         require(balanceOf[vendor] >= tokens, "Insufficient balance");
 
         balanceOf[vendor] -= tokens;
@@ -117,22 +142,5 @@ contract KGISLCollegeToken {
     function getBalance(address user) external view returns (uint256) {
         return balanceOf[user];
     }
-    function adminSendToStudent(
-    address student,
-    uint256 amount
-) external onlyAdmin {
-
-    require(isStudent[student], "Not student");
-    require(amount > 0, "Invalid amount");
-
-    uint256 tokens = amount * (10 ** decimals);
-    require(balanceOf[admin] >= tokens, "Admin insufficient balance");
-
-    balanceOf[admin] -= tokens;
-    balanceOf[student] += tokens;
-
-    emit Transfer(admin, student, tokens);
-}
 
 }
-

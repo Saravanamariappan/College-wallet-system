@@ -11,8 +11,10 @@ import {
   getAdminDashboard,
   getTotalMinted,
   getVendorAdminTransactions,
+  adminSendTokens,
   getAdminSendHistory,
-  getAdminWalletBalance
+  getAdminWalletBalance,
+  getAdminSettings
 } from "../controllers/admin.controller.js";
 
 import { getAllTransactions } from "../controllers/transaction.controller.js";
@@ -40,9 +42,13 @@ router.get("/mint/total", getTotalMinted);
 router.get("/transactions", getAllTransactions);
 router.get("/vendor-admin-transactions", getVendorAdminTransactions);
 
-router.get("/send-history", getAdminSendHistory);
+/* ================= SEND ================= */
+router.post("/send-token", adminSendTokens);
+router.get("/send/history", getAdminSendHistory);
 
 
 router.get("/wallet-balance", getAdminWalletBalance);
+router.get("/settings", getAdminSettings);
+
 
 export default router;

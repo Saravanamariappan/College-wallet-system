@@ -182,7 +182,21 @@
       throw err;
     }
   }
+  export async function adminSendToStudentOnChain(student, amount) {
+  try {
+    const addr = getAddress(student);
 
-  console.log(getTokenBalance(0xc7ffa99436500857a49fa14337c5fB7e6EaB3CD2))
+    const tx = await adminContract.adminSendToStudent(
+      addr,
+      Number(amount)
+    );
 
+    await tx.wait(1);
+
+    return tx.hash;
+
+  } catch (err) {
+    throw err;
+  }
+}
 

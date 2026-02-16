@@ -1,23 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { Coins, CheckCircle } from "lucide-react";
+import { Coins, Send, CheckCircle } from "lucide-react";
 import axios from "axios";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
 
-const AdminMintTokens: React.FC = () => {
+type Mode = "mint" | "send";
+
+interface Student {
+  id: number;
+  name: string;
+  wallet_address: string;
+}
+
+const AdminTokenManager: React.FC = () => {
+
+  /* ================= MODE ================= */
+  const [mode, setMode] = useState<Mode>("mint");
+
+  /* ================= FORM ================= */
   const [wallet, setWallet] = useState("");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mintResult, setMintResult] = useState<any>(null);
+  const [result, setResult] = useState<any>(null);
 
-  const [history, setHistory] = useState<any[]>([]);
+  /* ================= STUDENTS ================= */
+  const [students, setStudents] = useState<Student[]>([]);
+
+  /* ================= DATA ================= */
+  const [mintHistory, setMintHistory] = useState<any[]>([]);
+  const [sendHistory, setSendHistory] = useState<any[]>([]);
   const [totalMinted, setTotalMinted] = useState<number>(0);
 
   const quickAmounts = [100, 500, 1000, 5000];
 
-  /* ===============================
-     FETCH TOTAL MINTED (DB)
-  =============================== */
+  /* ================= FETCH STUDENTS ================= */
+  const fetchStudents = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/admin/students"
+      );
+      setStudents(res.data.students || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  /* ================= FETCH TOTAL MINTED ================= */
   const fetchTotalMinted = async () => {
     try {
       const res = await axios.get(
@@ -25,168 +53,347 @@ const AdminMintTokens: React.FC = () => {
       );
       setTotalMinted(Number(res.data.totalMinted));
     } catch (err) {
-      console.error("Total minted fetch error:", err);
+      console.error(err);
     }
   };
 
-  /* ===============================
-     FETCH MINT HISTORY
-  =============================== */
-  const fetchHistory = async () => {
+  /* ================= FETCH MINT HISTORY ================= */
+  const fetchMintHistory = async () => {
     try {
       const res = await axios.get(
         "http://localhost:5000/api/admin/mint/history"
       );
-      setHistory(res.data.data || []);
+      setMintHistory(res.data.data || []);
     } catch (err) {
-      console.error("Fetch history error:", err);
+      console.error(err);
     }
   };
 
+  /* ================= FETCH SEND HISTORY ================= */
+  const fetchSendHistory = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/admin/send/history"
+      );
+      setSendHistory(res.data.history || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  /* ================= INIT ================= */
   useEffect(() => {
-    fetchHistory();
+    fetchStudents();
     fetchTotalMinted();
+    fetchMintHistory();
+    fetchSendHistory();
   }, []);
 
-  /* ===============================
-     HANDLE MINT
-  =============================== */
+  /* ================= HANDLE MINT ================= */
   const handleMint = async () => {
+
     if (!wallet || !amount) {
-      toast.error("Wallet & amount required");
+      toast.error("Select student & amount");
       return;
     }
 
     try {
+
       setLoading(true);
 
       const res = await axios.post(
         "http://localhost:5000/api/admin/mint-token",
-        { walletAddress: wallet, amount }
+        {
+          walletAddress: wallet,
+          amount: Number(amount)
+        }
       );
 
-      setMintResult(res.data);
-      toast.success("Mint successful!");
+      setResult(res.data);
 
-      // refresh stats
-      fetchHistory();
+      toast.success("Mint successful");
+
+      fetchMintHistory();
       fetchTotalMinted();
 
       setWallet("");
       setAmount("");
 
     } catch (err: any) {
+
       toast.error(err.response?.data?.error || "Mint failed");
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
+  /* ================= HANDLE SEND ================= */
+  const handleSend = async () => {
+
+    if (!wallet || !amount) {
+      toast.error("Select student & amount");
+      return;
+    }
+
+    try {
+
+      setLoading(true);
+
+      const res = await axios.post(
+        "http://localhost:5000/api/admin/send-token",
+        {
+          walletAddress: wallet,
+          amount: Number(amount)
+        }
+      );
+
+      setResult(res.data);
+
+      toast.success("Send successful");
+
+      fetchSendHistory();
+
+      setWallet("");
+      setAmount("");
+
+    } catch (err: any) {
+
+      toast.error(err.response?.data?.error || "Send failed");
+
+    } finally {
+
+      setLoading(false);
+
+    }
+  };
+
+  /* ================= HANDLE ACTION ================= */
+  const handleAction = () => {
+    if (mode === "mint") handleMint();
+    else handleSend();
+  };
+
+  /* ================= HISTORY ================= */
+  const history = mode === "mint" ? mintHistory : sendHistory;
+
   return (
+
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Mint Tokens</h1>
+
+      <h1 className="text-3xl font-bold">
+        Token Manager
+      </h1>
+
+      {/* ================= MODE SWITCH ================= */}
+
+      <div className="flex gap-3">
+
+        <button
+          onClick={() => {
+            setMode("mint");
+            setResult(null);
+          }}
+          className={`px-6 py-2 rounded-xl flex items-center gap-2
+          ${mode === "mint"
+              ? "bg-primary text-white"
+              : "bg-secondary/30"
+            }`}
+        >
+          <Coins className="w-4 h-4" />
+          Mint
+        </button>
+
+        <button
+          onClick={() => {
+            setMode("send");
+            setResult(null);
+          }}
+          className={`px-6 py-2 rounded-xl flex items-center gap-2
+          ${mode === "send"
+              ? "bg-primary text-white"
+              : "bg-secondary/30"
+            }`}
+        >
+          <Send className="w-4 h-4" />
+          Send
+        </button>
+
+      </div>
+
+      {/* ================= MAIN ================= */}
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* ================= MINT FORM ================= */}
+
+        {/* ================= FORM ================= */}
+
         <div className="glass-card p-6 space-y-4">
+
           <h3 className="font-semibold flex gap-2 items-center">
-            <Coins className="w-5 h-5 text-warning" />
-            Mint Tokens
+
+            {mode === "mint"
+              ? <Coins className="w-5 h-5 text-warning" />
+              : <Send className="w-5 h-5 text-warning" />
+            }
+
+            {mode === "mint"
+              ? "Mint Tokens"
+              : "Send Tokens"
+            }
+
           </h3>
 
-          {!mintResult ? (
+          {!result ? (
+
             <>
-              <input
+
+              {/* STUDENT SELECT */}
+
+              <select
                 value={wallet}
                 onChange={(e) => setWallet(e.target.value)}
-                placeholder="Paste student wallet address"
                 className="input-field w-full"
-              />
+              >
+                <option value="">
+                  Select Student
+                </option>
+
+                {students.map((s) => (
+
+                  <option
+                    key={s.id}
+                    value={s.wallet_address}
+                  >
+                    {s.name} ({s.wallet_address.slice(0, 6)}...)
+                  </option>
+
+                ))}
+
+              </select>
+
+              {/* AMOUNT */}
 
               <input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="Amount"
-                className="input-field w-full text-lg"
+                className="input-field w-full"
               />
 
-              <div className="flex flex-wrap gap-2">
+              {/* QUICK */}
+
+              <div className="flex gap-2 flex-wrap">
+
                 {quickAmounts.map((amt) => (
+
                   <button
                     key={amt}
                     onClick={() => setAmount(amt.toString())}
-                    className="px-4 py-2 bg-warning/20 rounded-xl text-warning"
+                    className="px-4 py-2 bg-warning/20 rounded-xl"
                   >
                     ₹{amt}
                   </button>
+
                 ))}
+
               </div>
 
+              {/* BUTTON */}
+
               <button
-                onClick={handleMint}
+                onClick={handleAction}
                 disabled={loading}
                 className="btn-primary w-full py-3"
               >
-                {loading ? <LoadingSpinner size="sm" /> : "Mint Tokens"}
+
+                {loading
+                  ? <LoadingSpinner size="sm" />
+                  : mode === "mint"
+                    ? "Mint Tokens"
+                    : "Send Tokens"
+                }
+
               </button>
+
             </>
+
           ) : (
-            <div className="space-y-4 text-center">
+
+            <div className="text-center space-y-3">
+
               <CheckCircle className="w-16 h-16 mx-auto text-success" />
-              <p className="text-xl font-bold">Mint Success</p>
-              <p>{mintResult.amount} tokens minted</p>
+
+              <p className="text-xl font-bold">
+                Success
+              </p>
 
               <button
-                onClick={() => setMintResult(null)}
+                onClick={() => setResult(null)}
                 className="btn-primary w-full"
               >
-                Mint More
+                Do Another
               </button>
+
             </div>
+
           )}
+
         </div>
 
-        {/* ================= STATS ================= */}
+        {/* ================= HISTORY ================= */}
+
         <div className="glass-card p-6 space-y-4">
-          <h3 className="font-semibold">Token Statistics</h3>
 
-          {/* TOTAL MINTED (DB SYNC) */}
-          <div className="flex justify-between bg-secondary/30 p-3 rounded-xl">
-            <span>Total Minted (System)</span>
-            <b>₹{totalMinted}</b>
-          </div>
+          {mode === "mint" && (
 
-          {/* MINT HISTORY */}
-          <div className="space-y-2">
-            <h4 className="font-medium">Mint History</h4>
-
-            <div className="max-h-60 overflow-y-auto space-y-2">
-              {history.map((h) => (
-                <div
-                  key={h.id}
-                  className="p-3 bg-secondary/20 rounded-lg text-sm"
-                >
-                  <div className="font-mono text-xs break-all">
-                    {h.student_wallet}
-                  </div>
-                  <div className="font-semibold text-success mt-1">
-                    ₹{h.amount}
-                  </div>
-                </div>
-              ))}
-
-              {history.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center">
-                  No mint history found
-                </p>
-              )}
+            <div className="flex justify-between bg-secondary/30 p-3 rounded-xl">
+              <span>Total Minted</span>
+              <b>₹{totalMinted}</b>
             </div>
+
+          )}
+
+          <h4 className="font-semibold">
+            {mode === "mint"
+              ? "Mint History"
+              : "Send History"
+            }
+          </h4>
+
+          <div className="max-h-60 overflow-y-auto space-y-2">
+
+            {history.map((h) => (
+
+              <div
+                key={h.id}
+                className="p-3 bg-secondary/20 rounded-lg"
+              >
+
+                <div className="text-xs font-mono break-all">
+                  {h.student_wallet || h.receiver_wallet}
+                </div>
+
+                <div className="font-semibold text-success">
+                  ₹{h.amount}
+                </div>
+
+              </div>
+
+            ))}
+
           </div>
+
         </div>
+
       </div>
+
     </div>
+
   );
+
 };
 
-export default AdminMintTokens;
+export default AdminTokenManager;

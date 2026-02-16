@@ -84,8 +84,8 @@ const AdminOverview: React.FC = () => {
   ];
 
   return (
-    /* PAGE SCROLL COMPLETELY OFF */
-    <div className="space-y-6 overflow-hidden h-full">
+    /* 🔥 PAGE SCROLL REMOVED */
+    <div className="space-y-5 overflow-hidden">
 
       <h1 className="text-3xl font-bold">Admin Dashboard</h1>
 
@@ -103,14 +103,14 @@ const AdminOverview: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* LEFT – PAYMENT HISTORY */}
-        <div className="lg:col-span-2 glass-card p-6 flex flex-col">
-          <h3 className="font-semibold mb-4">
+        {/* LEFT – PAYMENT HISTORY (COMPACT) */}
+        <div className="lg:col-span-2 glass-card p-4 flex flex-col">
+          <h3 className="font-semibold mb-3 text-sm">
             Vendor → Admin Payment History
           </h3>
 
-          {/* 🔥 ONLY THIS SCROLLS */}
-          <div className="space-y-3 overflow-y-auto max-h-[420px] pr-2">
+          {/* ✅ ONLY LIST SCROLLS (SMALL HEIGHT) */}
+          <div className="space-y-2 overflow-y-auto max-h-[280px] pr-1">
             {payments.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center">
                 No transactions found
@@ -119,16 +119,16 @@ const AdminOverview: React.FC = () => {
               payments.map((p) => (
                 <div
                   key={p.id}
-                  className="flex justify-between items-center bg-secondary/20 p-3 rounded-lg"
+                  className="flex justify-between items-center bg-secondary/20 px-3 py-2 rounded-md"
                 >
                   <div>
-                    <p className="font-semibold">{p.amount} KGCT</p>
-
+                    <p className="font-medium text-sm">
+                      {p.amount} KGCT
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {p.vendor_name}
                     </p>
-
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-[11px] text-muted-foreground">
                       {new Date(p.created_at).toLocaleString()}
                     </p>
                   </div>
@@ -138,7 +138,7 @@ const AdminOverview: React.FC = () => {
                     target="_blank"
                     className="text-blue-400"
                   >
-                    <ExternalLink size={16} />
+                    <ExternalLink size={14} />
                   </a>
                 </div>
               ))
@@ -146,11 +146,11 @@ const AdminOverview: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT – ADMIN WALLET */}
+        {/* RIGHT – ADMIN WALLET (COMPACT) */}
         {showWallet && (
-          <div className="glass-card p-6">
-            <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <Wallet />
+          <div className="glass-card p-4">
+            <h3 className="font-semibold mb-3 flex items-center gap-2 text-sm">
+              <Wallet size={16} />
               Admin Wallet
             </h3>
 
@@ -158,24 +158,26 @@ const AdminOverview: React.FC = () => {
               <p>Loading wallet...</p>
             ) : (
               <>
-                <p className="text-sm text-muted-foreground">Wallet Address</p>
-                <p className="font-mono break-all">
+                <p className="text-xs text-muted-foreground mb-1">
+                  Wallet Address
+                </p>
+                <p className="font-mono text-xs break-all">
                   {walletBalance?.wallet}
                 </p>
 
-                <p className="mt-4 text-sm text-muted-foreground">
-                  POL Balance
-                </p>
-                <p className="text-lg font-semibold">
-                  {Number(walletBalance?.polBalance).toFixed(6)} POL
-                </p>
+                <div className="mt-3">
+                  <p className="text-xs text-muted-foreground">POL Balance</p>
+                  <p className="font-semibold text-sm">
+                    {Number(walletBalance?.polBalance).toFixed(4)} POL
+                  </p>
+                </div>
 
-                <p className="mt-4 text-sm text-muted-foreground">
-                  Token Balance
-                </p>
-                <p className="text-lg font-semibold">
-                  {Number(walletBalance?.tokenBalance).toFixed(4)} KGCT
-                </p>
+                <div className="mt-3">
+                  <p className="text-xs text-muted-foreground">Token Balance</p>
+                  <p className="font-semibold text-sm">
+                    {Number(walletBalance?.tokenBalance).toFixed(4)} KGCT
+                  </p>
+                </div>
               </>
             )}
           </div>
