@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 const EXPLORER = "https://amoy.polygonscan.com/tx/";
 
 interface History {

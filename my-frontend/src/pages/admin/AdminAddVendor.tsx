@@ -4,7 +4,7 @@ import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
 import axios from "axios";
 
-const API_ADMIN = "http://localhost:5000/api/admin";
+const API_ADMIN = `${import.meta.env.VITE_API_BASE_URL}/api/admin`;
 
 interface Vendor {
   id: number;

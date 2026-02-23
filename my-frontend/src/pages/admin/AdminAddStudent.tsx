@@ -4,9 +4,10 @@ import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
 import axios from "axios";
 
-const API_ADMIN = "http://localhost:5000/api/admin";
-const API_STUDENT = "http://localhost:5000/api/students";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+const API_ADMIN = `${BASE_URL}/api/admin`;
+const API_STUDENT = `${BASE_URL}/api/students`;
 const AdminAddStudent = () => {
   const [activeTab, setActiveTab] = useState("create");
 

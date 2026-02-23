@@ -13,6 +13,8 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 interface AdminSettingsProps {
   onNavigate: (tab: string) => void;
 }
@@ -41,7 +43,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ onNavigate }) => {
       try {
 
         const res = await fetch(
-          "http://localhost:5000/api/admin/settings"
+          `${API_BASE}/api/admin/settings`
         );
 
         const data = await res.json();

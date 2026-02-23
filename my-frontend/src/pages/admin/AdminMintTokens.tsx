@@ -4,6 +4,8 @@ import axios from "axios";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 type Mode = "mint" | "send";
 
 interface Student {
@@ -37,7 +39,7 @@ const AdminTokenManager: React.FC = () => {
   const fetchStudents = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/admin/students"
+        `${API_BASE}/api/admin/students`
       );
       setStudents(res.data.students || []);
     } catch (err) {
@@ -49,7 +51,7 @@ const AdminTokenManager: React.FC = () => {
   const fetchTotalMinted = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/admin/mint/total"
+        `${API_BASE}/api/admin/mint/total`
       );
       setTotalMinted(Number(res.data.totalMinted));
     } catch (err) {
@@ -61,7 +63,7 @@ const AdminTokenManager: React.FC = () => {
   const fetchMintHistory = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/admin/mint/history"
+        `${API_BASE}/api/admin/mint/history`
       );
       setMintHistory(res.data.data || []);
     } catch (err) {
@@ -73,7 +75,7 @@ const AdminTokenManager: React.FC = () => {
   const fetchSendHistory = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/admin/send/history"
+        `${API_BASE}/api/admin/send/history`
       );
       setSendHistory(res.data.history || []);
     } catch (err) {
@@ -102,7 +104,7 @@ const AdminTokenManager: React.FC = () => {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:5000/api/admin/mint-token",
+        `${API_BASE}/api/admin/mint-token`,
         {
           walletAddress: wallet,
           amount: Number(amount)
@@ -143,7 +145,7 @@ const AdminTokenManager: React.FC = () => {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:5000/api/admin/send-token",
+        `${API_BASE}/api/admin/send-token`,
         {
           walletAddress: wallet,
           amount: Number(amount)

@@ -5,7 +5,7 @@ import WalletCard from '@/components/common/WalletCard';
 import StatCard from '@/components/common/StatCard';
 import { toast } from 'sonner';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 interface Tx {
   id: number;

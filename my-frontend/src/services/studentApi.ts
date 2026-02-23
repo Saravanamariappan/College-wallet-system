@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/students";
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api/students`;
 
 export const getStudentWallet = async (userId: number) => {
-  return axios.get(`${API}/wallet/${userId}`);
+  return axios.get(`${API_BASE}/wallet/${userId}`);
 };
 
 export const payVendor = (data: {
@@ -11,13 +11,13 @@ export const payVendor = (data: {
   vendorAddress: string;
   amount: number;
 }) => {
-  return axios.post(`${API}/pay`, data);
+  return axios.post(`${API_BASE}/pay`, data);
 };
 
 export const getStudentBalance = (address: string) => {
-  return axios.get(`${API}/balance/${address}`);
+  return axios.get(`${API_BASE}/balance/${address}`);
 };
 
 export const getStudentPrivateKey = async (userId: number) => {
-  return axios.get(`http://localhost:5000/api/students/private-key/${userId}`);
+  return axios.get(`${API_BASE}/private-key/${userId}`);
 };

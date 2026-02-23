@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import TransactionTable from '@/components/common/TransactionTable';
 import { Transaction } from '@/types';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 const StudentHistory: React.FC = () => {
   const { user } = useAuth();

@@ -3,7 +3,7 @@ import { Send, ExternalLink, CheckCircle } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 
 

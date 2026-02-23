@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import TransactionTable from '@/components/common/TransactionTable';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 const VendorHistory: React.FC = () => {
   const { user } = useAuth();
