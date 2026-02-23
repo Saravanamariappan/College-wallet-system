@@ -33,18 +33,24 @@ export const login = async (req, res) => {
 
     if (role === "STUDENT") {
       const [s] = await db.query(
-        "SELECT wallet_address FROM students WHERE user_id=?",
+        "SELECT wallet_address FROM students WHERE user_id=? AND status='ACTIVE'",
         [user.id]
       );
-      walletAddress = s[0]?.wallet_address;
+
+      if (!s.length)
+        return res.status(403).json({ message: "Account deactivated" });
+
+      walletAddress = s[0].wallet_address;
     }
 
     if (role === "VENDOR") {
       const [v] = await db.query(
-        "SELECT wallet_address FROM vendors WHERE user_id=?",
+        "SELECT wallet_address FROM vendors WHERE user_id=? AND status='ACTIVE'",
         [user.id]
       );
-      walletAddress = v[0]?.wallet_address;
+      if (!v.length)
+        return res.status(403).json({ message: "Account deactivated" });
+      walletAddress = v[0].wallet_address;
     }
 
     const token = jwt.sign(

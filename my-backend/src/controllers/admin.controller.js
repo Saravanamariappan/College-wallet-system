@@ -173,30 +173,35 @@ export const registerVendor = async (req, res) => {
 export const getAllStudents = async (req, res) => {
   try {
     const [rows] = await db.query(`
-      SELECT id, name, email, wallet_address, balance
+      SELECT id, name, email, wallet_address, balance, status
       FROM students
       ORDER BY id DESC
     `);
 
-    res.json({ success: true, students: rows });
+    res.json({
+      success: true,
+      students: rows
+    });
 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
-
 /* =========================================================
    GET ALL VENDORS
 ========================================================= */
 export const getAllVendors = async (req, res) => {
   try {
     const [rows] = await db.query(`
-      SELECT id, user_id, name, category, email, wallet_address, balance
+      SELECT id, name, category, email, wallet_address, balance, status
       FROM vendors
       ORDER BY id DESC
     `);
 
-    res.json({ success: true, vendors: rows });
+    res.json({
+      success: true,
+      vendors: rows
+    });
 
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -492,3 +497,49 @@ export const getAdminSettings = async (req, res) => {
   }
 };
 
+
+export const updateStudentStatus = async (req, res) => {
+  try {
+    const { walletAddress, status } = req.body;
+
+    if (!walletAddress || !status) {
+      return res.status(400).json({ error: "Missing data" });
+    }
+
+    await db.query(
+      "UPDATE students SET status=? WHERE wallet_address=?",
+      [status, walletAddress]
+    );
+
+    res.json({
+      success: true,
+      message: "Student status updated"
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const updateVendorStatus = async (req, res) => {
+  try {
+    const { walletAddress, status } = req.body;
+
+    if (!walletAddress || !status) {
+      return res.status(400).json({ error: "Missing data" });
+    }
+
+    await db.query(
+      "UPDATE vendors SET status=? WHERE wallet_address=?",
+      [status, walletAddress]
+    );
+
+    res.json({
+      success: true,
+      message: "Vendor status updated"
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

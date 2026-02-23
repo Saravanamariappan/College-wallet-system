@@ -14,7 +14,9 @@ import {
   adminSendTokens,
   getAdminSendHistory,
   getAdminWalletBalance,
-  getAdminSettings
+  getAdminSettings,
+  updateStudentStatus,
+  updateVendorStatus
 } from "../controllers/admin.controller.js";
 
 import { getAllTransactions } from "../controllers/transaction.controller.js";
@@ -49,6 +51,6 @@ router.get("/send/history", getAdminSendHistory);
 
 router.get("/wallet-balance", getAdminWalletBalance);
 router.get("/settings", getAdminSettings);
-
-
+router.post("/update-student-status", updateStudentStatus);
+router.post("/update-vendor-status", updateVendorStatus);
 export default router;

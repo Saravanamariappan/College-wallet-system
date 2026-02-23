@@ -6,6 +6,7 @@ import {
   Coins,
   History,
   Settings,
+  Users,
 } from "lucide-react";
 
 import BottomNav from "@/components/layout/BottomNav";
@@ -18,12 +19,33 @@ import AdminAddVendor from "./AdminAddVendor";
 import AdminMintTokens from "./AdminMintTokens";
 import AdminTransactions from "./AdminTransactions";
 import AdminSettings from "./AdminSettings";
+import AdminManageUsers from "./AdminManageUsers";
 
 const AdminDashboard: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState("overview");
 
-  /* DESKTOP TABS */
+  const getPageTitle = () => {
+    switch (activeTab) {
+      case "overview":
+        return "Admin Overview";
+      case "students":
+        return "Add Students";
+      case "vendors":
+        return "Add Vendors";
+      case "manage":
+        return "Manage Users";
+      case "mint":
+        return "Mint Tokens";
+      case "transactions":
+        return "Transaction History";
+      case "settings":
+        return "Admin Settings";
+      default:
+        return "Admin Dashboard";
+    }
+  };
+
   const tabs = [
     {
       id: "overview",
@@ -39,6 +61,11 @@ const AdminDashboard: React.FC = () => {
       id: "vendors",
       label: "Vendors",
       icon: <Store className="w-5 h-5" />,
+    },
+    {
+      id: "manage",
+      label: "Manage",
+      icon: <Users className="w-5 h-5" />,
     },
     {
       id: "mint",
@@ -57,7 +84,6 @@ const AdminDashboard: React.FC = () => {
     },
   ];
 
-  /* MOBILE TABS */
   const mobileTabs = [
     {
       id: "overview",
@@ -65,14 +91,9 @@ const AdminDashboard: React.FC = () => {
       icon: <LayoutDashboard className="w-5 h-5" />,
     },
     {
-      id: "students",
-      label: "Students",
-      icon: <UserPlus className="w-5 h-5" />,
-    },
-    {
-      id: "vendors",
-      label: "Vendors",
-      icon: <Store className="w-5 h-5" />,
+      id: "manage",
+      label: "Users",
+      icon: <Users className="w-5 h-5" />,
     },
     {
       id: "mint",
@@ -86,48 +107,35 @@ const AdminDashboard: React.FC = () => {
     },
   ];
 
-  /* PAGE RENDER */
   const renderContent = () => {
-
-    if (activeTab === "overview")
-      return <AdminOverview />;
-
-    if (activeTab === "students")
-      return <AdminAddStudent />;
-
-    if (activeTab === "vendors")
-      return <AdminAddVendor />;
-
-    if (activeTab === "mint")
-      return <AdminMintTokens />;
-
-    if (activeTab === "transactions")
-      return <AdminTransactions />;
-
-    if (activeTab === "settings")
-      return <AdminSettings onNavigate={setActiveTab} />;
-
+    if (activeTab === "overview") return <AdminOverview />;
+    if (activeTab === "students") return <AdminAddStudent />;
+    if (activeTab === "vendors") return <AdminAddVendor />;
+    if (activeTab === "manage") return <AdminManageUsers />;
+    if (activeTab === "mint") return <AdminMintTokens />;
+    if (activeTab === "transactions") return <AdminTransactions />;
+    if (activeTab === "settings") return <AdminSettings onNavigate={setActiveTab} />;
     return <AdminOverview />;
   };
 
   return (
-
     <div className="min-h-screen bg-background">
 
-      {/* MOBILE HEADER */}
       <MobileHeader />
 
-      {/* DESKTOP SIDEBAR */}
       <DesktopSidebar
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}
         tabs={tabs}
       />
 
-      {/* MAIN CONTENT */}
       <main className="pt-16 pb-24 lg:pt-0 lg:pb-0 lg:ml-64">
 
-        <div className="p-4 lg:p-8 max-w-6xl mx-auto">
+        <div className="p-4 lg:p-8 max-w-6xl mx-auto space-y-6">
+
+          <h1 className="text-3xl font-bold tracking-tight">
+            {getPageTitle()}
+          </h1>
 
           {renderContent()}
 
@@ -135,7 +143,6 @@ const AdminDashboard: React.FC = () => {
 
       </main>
 
-      {/* MOBILE NAV */}
       <BottomNav
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}

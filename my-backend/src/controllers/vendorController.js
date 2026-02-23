@@ -94,7 +94,7 @@ export const getVendorSettings = async (req, res) => {
     const [rows] = await db.query(
       `SELECT id, name, category, email, wallet_address, private_key, balance
        FROM vendors
-       WHERE user_id = ?`,
+       WHERE user_id = ? AND status='ACTIVE'`,
       [userId]
     );
 
@@ -128,7 +128,7 @@ export const vendorPayAdmin = async (req, res) => {
     await conn.beginTransaction();
 
     const [vendors] = await conn.query(
-      "SELECT id, balance FROM vendors WHERE wallet_address = ?",
+      "SELECT id, balance FROM vendors WHERE wallet_address=? AND status='ACTIVE'",
       [vendor]
     );
 

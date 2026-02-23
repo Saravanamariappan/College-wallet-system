@@ -16,7 +16,7 @@ export const getStudentWallet = async (req, res) => {
     const [rows] = await db.query(
       `SELECT wallet_address, balance 
        FROM students 
-       WHERE user_id = ?`,
+       WHERE user_id = ? AND status='ACTIVE'`,
       [userId]
     );
 
@@ -57,7 +57,7 @@ export const payVendor = async (req, res) => {
 
     /* STUDENT */
     const [studentRows] = await conn.query(
-      "SELECT id, balance, email FROM students WHERE wallet_address=?",
+      "SELECT id, balance, email FROM students WHERE wallet_address=? AND status='ACTIVE'",
       [student]
     );
 
@@ -68,7 +68,7 @@ export const payVendor = async (req, res) => {
 
     /* VENDOR */
     const [vendorRows] = await conn.query(
-      "SELECT id FROM vendors WHERE wallet_address=?",
+      "SELECT id FROM vendors WHERE wallet_address=? AND status='ACTIVE'",
       [vendor]
     );
 

@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import axios from "axios";
 
 const API_ADMIN = "http://localhost:5000/api/admin";
-
 const API_STUDENT = "http://localhost:5000/api/students";
 
 const AdminAddStudent = () => {
@@ -14,7 +13,7 @@ const AdminAddStudent = () => {
   const [loading, setLoading] = useState(false);
   const [loadingList, setLoadingList] = useState(true);
 
-  const [createdWallet, setCreatedWallet] = useState(null);
+  const [createdWallet, setCreatedWallet] = useState<any>(null);
   const [showPrivateKey, setShowPrivateKey] = useState(false);
 
   const [copied, setCopied] = useState({ address: false, key: false });
@@ -25,7 +24,8 @@ const AdminAddStudent = () => {
   const [registerAddress, setRegisterAddress] = useState("");
   const [registerLoading, setRegisterLoading] = useState(false);
 
-  const [students, setStudents] = useState([]);
+  const [students, setStudents] = useState<any[]>([]);
+  const [search, setSearch] = useState(""); // ✅ SEARCH STATE ADDED
 
   /* -----------------------------------------
         LOAD STUDENTS FROM DATABASE
@@ -50,70 +50,66 @@ const AdminAddStudent = () => {
         CREATE WALLET
   ------------------------------------------ */
   const handleCreateWallet = async () => {
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const res = await axios.post(
-      `${API_ADMIN}/students/create-wallet`
-    );
+      const res = await axios.post(
+        `${API_ADMIN}/students/create-wallet`
+      );
 
-    const { walletAddress, privateKey } = res.data;
+      const { walletAddress, privateKey } = res.data;
 
-    setCreatedWallet({ address: walletAddress, privateKey });
+      setCreatedWallet({ address: walletAddress, privateKey });
 
-    toast.success("Wallet created!");
-
-  } catch (err) {
-    toast.error("Error creating wallet");
-  } finally {
-    setLoading(false);
-  }
-};
-
+      toast.success("Wallet created!");
+    } catch (err) {
+      toast.error("Error creating wallet");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /* -----------------------------------------
         REGISTER STUDENT
   ------------------------------------------ */
-const handleRegister = async () => {
-  if (!registerName || !registerEmail || !registerPassword || !registerAddress) {
-    toast.error("Fill all fields");
-    return;
-  }
+  const handleRegister = async () => {
+    if (!registerName || !registerEmail || !registerPassword || !registerAddress) {
+      toast.error("Fill all fields");
+      return;
+    }
 
-  try {
-    setRegisterLoading(true);
+    try {
+      setRegisterLoading(true);
 
-    await axios.post(
-      `${API_ADMIN}/students/register`,
-      {
-        name: registerName,
-        email: registerEmail,
-        password: registerPassword,
-        walletAddress: registerAddress,
-      }
-    );
+      await axios.post(
+        `${API_ADMIN}/students/register`,
+        {
+          name: registerName,
+          email: registerEmail,
+          password: registerPassword,
+          walletAddress: registerAddress,
+        }
+      );
 
-    toast.success("Student registered!");
+      toast.success("Student registered!");
 
-    setRegisterName("");
-    setRegisterEmail("");
-    setRegisterPassword("");
-    setRegisterAddress("");
+      setRegisterName("");
+      setRegisterEmail("");
+      setRegisterPassword("");
+      setRegisterAddress("");
 
-    loadStudents();
-
-  } catch (error) {
-    toast.error(error.response?.data?.error || "Registration failed");
-  } finally {
-    setRegisterLoading(false);
-  }
-};
-
+      loadStudents();
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Registration failed");
+    } finally {
+      setRegisterLoading(false);
+    }
+  };
 
   /* -----------------------------------------
         COPY TEXT FUNCTION
   ------------------------------------------ */
-  const copyToClipboard = async (text, type) => {
+  const copyToClipboard = async (text: string, type: "address" | "key") => {
     if (!text) {
       toast.error("Nothing to copy!");
       return;
@@ -134,6 +130,13 @@ const handleRegister = async () => {
     setShowPrivateKey(false);
   };
 
+  // ✅ FILTERED STUDENTS
+  const filteredStudents = students.filter(
+    (s) =>
+      s.name?.toLowerCase().includes(search.toLowerCase()) ||
+      s.wallet_address?.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="space-y-6 animate-fade-in">
       <h1 className="text-3xl font-bold">Add Student</h1>
@@ -141,7 +144,6 @@ const handleRegister = async () => {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* LEFT PANEL */}
         <div className="glass-card p-6">
-          {/* TABS */}
           <div className="flex gap-2 mb-6">
             <button
               className={`flex-1 py-3 rounded-xl ${activeTab === "create" ? "bg-primary text-white" : "bg-secondary"}`}
@@ -158,7 +160,6 @@ const handleRegister = async () => {
             </button>
           </div>
 
-          {/* CREATE NEW WALLET */}
           {activeTab === "create" ? (
             !createdWallet ? (
               <button className="btn-primary w-full py-4" disabled={loading} onClick={handleCreateWallet}>
@@ -168,7 +169,6 @@ const handleRegister = async () => {
               <div className="space-y-4">
                 <div className="p-4 bg-green-100 rounded-xl text-center">✓ Wallet Created</div>
 
-                {/* Wallet Address */}
                 <div className="p-4 bg-secondary rounded-xl">
                   <div className="flex justify-between">
                     <p>Wallet Address</p>
@@ -179,7 +179,6 @@ const handleRegister = async () => {
                   <p className="font-mono break-all">{createdWallet.address}</p>
                 </div>
 
-                {/* Private Key */}
                 <div className="p-4 bg-yellow-100 rounded-xl">
                   <div className="flex justify-between">
                     <p>Private Key</p>
@@ -202,7 +201,6 @@ const handleRegister = async () => {
               </div>
             )
           ) : (
-            /* REGISTER EXISTING WALLET */
             <div className="space-y-4">
               <input className="input-field" placeholder="Full Name" value={registerName} onChange={(e) => setRegisterName(e.target.value)} />
               <input className="input-field" placeholder="Email" value={registerEmail} onChange={(e) => setRegisterEmail(e.target.value)} />
@@ -220,14 +218,23 @@ const handleRegister = async () => {
         <div className="glass-card p-6">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <Users />
-            Registered Students ({students.length})
+            Registered Students ({filteredStudents.length})
           </h3>
+
+          {/* ✅ SEARCH INPUT ADDED HERE */}
+          <input
+            type="text"
+            placeholder="Search by name or wallet address..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="input-field mb-4"
+          />
 
           {loadingList ? (
             <p>Loading...</p>
           ) : (
             <div className="space-y-3 max-h-[400px] overflow-y-auto">
-              {students.map((s, i) => (
+              {filteredStudents.map((s, i) => (
                 <div key={i} className="p-3 bg-secondary rounded-xl flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary text-white flex items-center justify-center rounded-xl">
                     {s.name?.charAt(0)}

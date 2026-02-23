@@ -33,6 +33,7 @@ const AdminAddVendor: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState("");
 
   const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [search, setSearch] = useState(""); // ✅ SEARCH STATE ADDED
 
   const categories = [
     "Cafeteria",
@@ -87,45 +88,44 @@ const AdminAddVendor: React.FC = () => {
      REGISTER VENDOR
   ================================ */
   const handleRegister = async () => {
-  if (!name || !email || !password || !category || !walletAddress) {
-    toast.error("Fill all fields");
-    return;
-  }
+    if (!name || !email || !password || !category || !walletAddress) {
+      toast.error("Fill all fields");
+      return;
+    }
 
-  if (!createdWallet?.privateKey) {
-    toast.error("Create wallet first");
-    return;
-  }
+    if (!createdWallet?.privateKey) {
+      toast.error("Create wallet first");
+      return;
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    await axios.post(`${API_ADMIN}/vendors/register`, {
-      name,
-      email,
-      password,
-      category,
-      walletAddress,
-      privateKey: createdWallet.privateKey
-    });
+      await axios.post(`${API_ADMIN}/vendors/register`, {
+        name,
+        email,
+        password,
+        category,
+        walletAddress,
+        privateKey: createdWallet.privateKey
+      });
 
-    toast.success("Vendor registered successfully");
+      toast.success("Vendor registered successfully");
 
-    setName("");
-    setEmail("");
-    setPassword("");
-    setCategory("");
-    setWalletAddress("");
-    setCreatedWallet(null);
+      setName("");
+      setEmail("");
+      setPassword("");
+      setCategory("");
+      setWalletAddress("");
+      setCreatedWallet(null);
 
-    loadVendors();
-  } catch (err: any) {
-    toast.error(err.response?.data?.error || "Registration failed");
-  } finally {
-    setLoading(false);
-  }
-};
-
+      loadVendors();
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /* ================================
      COPY
@@ -146,6 +146,13 @@ const AdminAddVendor: React.FC = () => {
     setShowPrivateKey(false);
   };
 
+  // ✅ FILTERED VENDORS
+  const filteredVendors = vendors.filter(
+    (v) =>
+      v.name?.toLowerCase().includes(search.toLowerCase()) ||
+      v.wallet_address?.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="space-y-6 animate-fade-in">
       <h1 className="text-3xl font-bold">Add Vendor</h1>
@@ -153,7 +160,6 @@ const AdminAddVendor: React.FC = () => {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* LEFT PANEL */}
         <div className="glass-card p-6">
-          {/* TABS */}
           <div className="flex gap-2 mb-6">
             <button
               className={`flex-1 py-3 rounded-xl ${
@@ -178,7 +184,6 @@ const AdminAddVendor: React.FC = () => {
             </button>
           </div>
 
-          {/* CREATE WALLET */}
           {activeTab === "create" ? (
             !createdWallet ? (
               <button
@@ -242,7 +247,6 @@ const AdminAddVendor: React.FC = () => {
               </div>
             )
           ) : (
-            /* REGISTER VENDOR */
             <div className="space-y-4">
               <input
                 className="input-field"
@@ -298,14 +302,23 @@ const AdminAddVendor: React.FC = () => {
         {/* RIGHT PANEL */}
         <div className="glass-card p-6">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <Building2 /> Registered Vendors ({vendors.length})
+            <Building2 /> Registered Vendors ({filteredVendors.length})
           </h3>
+
+          {/* ✅ SEARCH INPUT ADDED HERE */}
+          <input
+            type="text"
+            placeholder="Search by name or wallet address..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="input-field mb-4"
+          />
 
           {loadingList ? (
             <p>Loading...</p>
           ) : (
             <div className="space-y-3 max-h-[400px] overflow-y-auto">
-              {vendors.map((v) => (
+              {filteredVendors.map((v) => (
                 <div key={v.id} className="p-3 bg-secondary rounded-xl">
                   <p className="font-medium">{v.name}</p>
                   <p className="font-mono text-xs break-all">
