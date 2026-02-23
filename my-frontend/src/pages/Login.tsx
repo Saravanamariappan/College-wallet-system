@@ -56,12 +56,12 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-background text-foreground">
       {/* Left Panel */}
       <div className="lg:w-1/2 p-8 lg:p-16 flex flex-col justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
-        <div className="absolute top-20 left-20 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-background" />
+        <div className="absolute top-20 left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-secondary/20 rounded-full blur-3xl" />
 
         <div className="relative z-10 max-w-md mx-auto lg:mx-0">
           <div className="flex items-center gap-4 mb-8">
@@ -69,7 +69,7 @@ const Login: React.FC = () => {
               <Hexagon className="w-10 h-10 text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl lg:text-4xl font-bold gradient-text">
+              <h1 className="text-3xl lg:text-4xl font-bold text-primary">
                 CampusPay
               </h1>
               <p className="text-muted-foreground">
@@ -80,7 +80,7 @@ const Login: React.FC = () => {
 
           <h2 className="text-2xl lg:text-3xl font-semibold mb-4">
             Digital Payments for <br />
-            <span className="gradient-text">Modern Campus</span>
+            <span className="text-primary">Modern Campus</span>
           </h2>
 
           <p className="text-muted-foreground text-lg mb-8">
@@ -112,7 +112,7 @@ const Login: React.FC = () => {
                   }`}
                 >
                   <div
-                    className={`w-10 h-10 mx-auto mb-2 rounded-xl bg-gradient-to-br ${r.color} flex items-center justify-center text-white`}
+                    className={`w-10 h-10 mx-auto mb-2 rounded-xl bg-primary/20 text-primary flex items-center justify-center text-white`}
                   >
                     {r.icon}
                   </div>

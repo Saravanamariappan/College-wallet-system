@@ -7,32 +7,45 @@
 /* ================= BASE ================= */
 
 @layer base {
-  :root {
-    /* Core colors */
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
+ :root {
+  /* MAIN BACKGROUND */
+  --background: 42 40% 96%;          /* Lace #f7f4ed */
+  --foreground: 230 70% 18%;         /* Midnight #0b1957 */
 
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
+  /* CARD */
+  --card: 0 0% 100%;
+  --card-foreground: 230 70% 18%;
 
-    --input: 222 47% 14%;
-    --border: 222 47% 16%;
+  /* PRIMARY (MAIN BRAND COLOR) */
+  --primary: 222 50% 51%;            /* Sapphire #426bc2 */
+  --primary-foreground: 0 0% 100%;
 
-    --primary: 174 72% 46%;
-    --primary-foreground: 222 47% 6%;
+  /* SECONDARY */
+  --secondary: 276 35% 80%;          /* Lavender #d2b3db */
+  --secondary-foreground: 230 70% 18%;
 
-    --secondary: 222 47% 14%;
-    --secondary-foreground: 210 40% 98%;
+  /* ACCENT */
+  --accent: 280 30% 90%;             /* Petal #e8d9ed */
+  --accent-foreground: 230 70% 18%;
 
-    --muted: 222 47% 12%;
-    --muted-foreground: 215 20% 55%;
+  /* EXTRA UI */
+  --muted: 210 60% 95%;              /* Bridal Blue #e9f3ff */
+  --muted-foreground: 230 40% 35%;
 
-    --success: 160 84% 39%;
-    --destructive: 0 84% 60%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 230 70% 18%;
 
-    --radius: 1rem;
-  }
+  --border: 230 30% 85%;
+  --input: 230 30% 85%;
+  --ring: 222 50% 51%;
 
+  --destructive: 0 84% 60%;
+  --success: 142 70% 45%;
+  --warning: 38 92% 50%;
+
+  --radius: 0.75rem;
+
+}
   * {
     @apply border-border;
   }
