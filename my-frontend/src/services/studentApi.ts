@@ -21,3 +21,7 @@ export const getStudentBalance = (address: string) => {
 export const getStudentPrivateKey = async (userId: number) => {
   return axios.get(`${API_BASE}/private-key/${userId}`);
 };
+
+export const changeStudentPassword = (userId: number, oldPassword?: string, newPassword?: string) => {
+  return axios.put(`/api/students/change-password/${userId}`, { oldPassword, newPassword });
+};

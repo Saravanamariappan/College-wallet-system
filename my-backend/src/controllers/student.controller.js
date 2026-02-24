@@ -148,3 +148,49 @@ export const getStudentPrivateKey = async (req, res) => {
   }
 };
 
+/* =========================================================
+   CHANGE STUDENT PASSWORD
+========================================================= */
+export const changeStudentPassword = async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+    const { oldPassword, newPassword } = req.body;
+
+    if (!userId || !newPassword) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Fetch current hashed password
+    const [rows] = await db.query(
+      "SELECT password FROM users WHERE id = ? AND role='STUDENT'",
+      [userId]
+    );
+
+    if (!rows.length) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    const currentHashed = rows[0].password;
+
+    // Optional: verify old password if provided
+    if (oldPassword) {
+      const match = await bcrypt.compare(oldPassword, currentHashed);
+      if (!match) return res.status(400).json({ error: "Old password is incorrect" });
+    }
+
+    // Hash the new password
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    // Update password in users table
+    await db.query(
+      "UPDATE users SET password = ? WHERE id = ?",
+      [hashed, userId]
+    );
+
+    res.json({ success: true, message: "Password updated successfully" });
+
+  } catch (err) {
+    console.error("changeStudentPassword error:", err);
+    res.status(500).json({ error: err.message });
+  }
+};

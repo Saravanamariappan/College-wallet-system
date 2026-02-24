@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { User, Key, Eye, EyeOff, Copy, Check, Shield, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { getStudentPrivateKey } from '@/services/studentApi';
+import { getStudentPrivateKey, changeStudentPassword } from '@/services/studentApi';
 import { toast } from 'sonner';
+import axios from 'axios';
 
 const StudentSettings: React.FC = () => {
   const { user, logout } = useAuth();
@@ -11,6 +12,10 @@ const StudentSettings: React.FC = () => {
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const [copiedKey, setCopiedKey] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
+
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [updatingPassword, setUpdatingPassword] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -40,6 +45,26 @@ const StudentSettings: React.FC = () => {
     toast.success('Copied!');
   };
 
+  const handleChangePassword = async () => {
+    if (!newPassword) return toast.error('New password cannot be empty');
+    setUpdatingPassword(true);
+
+    try {
+      await axios.put(`/api/students/change-password/${user?.id}`, {
+        oldPassword,
+        newPassword
+      });
+
+      setOldPassword('');
+      setNewPassword('');
+      toast.success('Password updated successfully!');
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Failed to update password');
+    } finally {
+      setUpdatingPassword(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
 
@@ -61,9 +86,7 @@ const StudentSettings: React.FC = () => {
         <div className="p-3 bg-secondary/50 rounded-lg">
           <p className="text-xs mb-1">Wallet Address</p>
           <div className="flex items-center justify-between gap-3">
-            <p className="font-mono text-sm break-all">
-              {user?.walletAddress}
-            </p>
+            <p className="font-mono text-sm break-all">{user?.walletAddress}</p>
             <button onClick={() => copyToClipboard(user?.walletAddress, 'address')}>
               {copiedAddress ? <Check /> : <Copy />}
             </button>
@@ -90,6 +113,38 @@ const StudentSettings: React.FC = () => {
               </button>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* CHANGE PASSWORD */}
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-3 flex items-center gap-2">
+          <Key className="w-5 h-5" />
+          Change Password
+        </h3>
+
+        <div className="flex flex-col gap-3">
+          <input
+            type="password"
+            placeholder="Old Password (optional if admin)"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            className="input input-bordered w-full"
+          />
+          <input
+            type="password"
+            placeholder="New Password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="input input-bordered w-full"
+          />
+          <button
+            onClick={handleChangePassword}
+            className="btn btn-primary"
+            disabled={updatingPassword}
+          >
+            {updatingPassword ? "Updating..." : "Update Password"}
+          </button>
         </div>
       </div>
 

@@ -2,7 +2,8 @@ import express from "express";
 import {
   payVendor,
   getStudentWallet,
-  getStudentPrivateKey
+  getStudentPrivateKey,
+  changeStudentPassword
 } from "../controllers/student.controller.js";
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router.get("/wallet/:userId", getStudentWallet);
 router.post("/pay", payVendor);
 
 router.get("/private-key/:userId", getStudentPrivateKey);
+router.put("/change-password/:userId", changeStudentPassword);
 
 
 export default router;
