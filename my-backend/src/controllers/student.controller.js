@@ -1,7 +1,6 @@
 import { getAddress } from "ethers";
 import { db } from "../config/db.js";
 import { studentPayVendor } from "../services/blockchainService.js";
-import bcrypt from "bcrypt";
 
 /* =========================================================
    GET STUDENT WALLET + BALANCE
@@ -195,8 +194,3 @@ export const changeStudentPassword = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-const isValid = await bcrypt.compare(password, user.password);
-
-console.log("Entered Password:", password);
-console.log("Stored Hash:", user.password);
-console.log("Compare Result:", isValid);

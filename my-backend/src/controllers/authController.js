@@ -93,3 +93,8 @@ export const login = async (req, res) => {
     });
   }
 };
+const isValid = await bcrypt.compare(password, user.password);
+
+console.log("Entered Password:", password);
+console.log("Stored Hash:", user.password);
+console.log("Compare Result:", isValid);
