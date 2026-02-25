@@ -1,6 +1,7 @@
 import { getAddress } from "ethers";
 import { db } from "../config/db.js";
 import { studentPayVendor } from "../services/blockchainService.js";
+import bcrypt from "bcrypt";
 
 /* =========================================================
    GET STUDENT WALLET + BALANCE
