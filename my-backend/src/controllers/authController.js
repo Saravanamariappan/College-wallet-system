@@ -12,6 +12,7 @@ export const login = async (req, res) => {
       });
     }
 
+    /* ================= FIND USER ================= */
     const [rows] = await db.query(
       "SELECT * FROM users WHERE email = ? AND role = ? LIMIT 1",
       [email, role]
@@ -25,6 +26,7 @@ export const login = async (req, res) => {
 
     const user = rows[0];
 
+    /* ================= ALWAYS USE BCRYPT ================= */
     const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
@@ -33,6 +35,7 @@ export const login = async (req, res) => {
       });
     }
 
+    /* ================= CHECK ACCOUNT STATUS ================= */
     let walletAddress = null;
 
     if (role === "STUDENT") {
@@ -65,6 +68,7 @@ export const login = async (req, res) => {
       walletAddress = v[0].wallet_address;
     }
 
+    /* ================= GENERATE TOKEN ================= */
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
