@@ -50,7 +50,8 @@ const StudentSettings: React.FC = () => {
     setUpdatingPassword(true);
 
     try {
-      await axios.put(`/api/students/change-password/${user?.id}`, {
+      await axios.put(
+      `${import.meta.env.VITE_API_BASE_URL}/api/students/change-password/${user?.id}`,{
         oldPassword,
         newPassword
       });

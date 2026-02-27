@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           name: data.user.name,
           email: data.user.email,
           role: data.user.role,
-          walletAddress: data.user.wallet_address
+          walletAddress: data.user.walletAddress
         };
       console.log("FINAL USER:", fixedUser);
 
