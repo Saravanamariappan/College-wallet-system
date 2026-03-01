@@ -4,16 +4,27 @@ import { Wallet, Send, History, Settings, LogOut } from "lucide-react";
 import { useAuth } from '@/context/AuthContext';
 
 const StudentDashboard: React.FC = () => {
-  const { logout } = useAuth();
+  const { logout } = useAuth(); // ✅ Backend same
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-slate-100">
 
       {/* SIDEBAR */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col p-5">
-        <h2 className="text-2xl font-bold mb-8 text-center">
-          Student Panel
-        </h2>
+      <aside className="w-64 
+        bg-gradient-to-b from-purple-700 via-purple-800 to-purple-900 
+        text-white flex flex-col p-6 shadow-xl">
+
+        {/* LOGO + TITLE */}
+        <div className="flex items-center gap-3 mb-10">
+          <img
+            src="/logo.png"
+            alt="KGiSL Logo"
+            className="h-8 w-8 object-contain"
+          />
+          <h2 className="text-lg font-semibold tracking-wide">
+            KGiSL Wallet
+          </h2>
+        </div>
 
         {/* NAV LINKS */}
         <nav className="space-y-3 flex-1">
@@ -23,22 +34,40 @@ const StudentDashboard: React.FC = () => {
           <SidebarLink to="/student/settings" icon={<Settings size={18} />} label="Settings" />
         </nav>
 
-        {/* LOGOUT BUTTON (BOTTOM) */}
+        {/* Divider */}
+        <div className="border-t border-white/10 my-4" />
+
+        {/* LOGOUT BUTTON */}
         <button
           onClick={logout}
-          className="mt-4 flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
+          className="flex items-center gap-3 px-4 py-3 rounded-xl 
+                     text-red-300 hover:bg-red-500/20 hover:text-red-200 transition"
         >
           <LogOut size={18} />
           <span>Logout</span>
         </button>
 
-        <p className="text-xs text-center text-gray-400 mt-4">
+        <p className="text-xs text-center text-purple-200 mt-6">
           © KGISL Wallet System
         </p>
       </aside>
 
       {/* CONTENT */}
-      <main className="flex-1 p-6 overflow-y-auto">
+      <main className="flex-1 p-8 overflow-y-auto">
+
+        {/* TOP HEADER */}
+        <div className="mb-8 flex items-center justify-between bg-white p-6 rounded-2xl shadow-sm">
+          <div>
+            <h1 className="text-2xl font-semibold text-slate-800">
+              Welcome back 👋
+            </h1>
+            <p className="text-sm text-slate-500">
+              Manage your wallet and transactions
+            </p>
+          </div>
+        </div>
+
+        {/* PAGE CONTENT */}
         <Outlet />
       </main>
     </div>
@@ -47,7 +76,8 @@ const StudentDashboard: React.FC = () => {
 
 export default StudentDashboard;
 
-/* ---------------- Sidebar Button ---------------- */
+
+/* ---------------- Sidebar Link ---------------- */
 
 type SidebarProps = {
   to: string;
@@ -61,10 +91,10 @@ const SidebarLink: React.FC<SidebarProps> = ({ to, icon, label }) => {
       to={to}
       end
       className={({ isActive }) =>
-        `flex items-center gap-3 px-4 py-3 rounded-xl transition
+        `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
         ${isActive
-          ? "bg-primary text-primary-foreground"
-          : "text-gray-300 hover:bg-white/10 hover:text-white"
+          ? "bg-white/20 text-white font-medium shadow"
+          : "text-purple-100 hover:bg-white/15 hover:text-white"
         }`
       }
     >

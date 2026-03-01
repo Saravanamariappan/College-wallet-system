@@ -7,45 +7,33 @@
 /* ================= BASE ================= */
 
 @layer base {
- :root {
-  /* MAIN BACKGROUND */
-  --background: 42 40% 96%;          /* Lace #f7f4ed */
-  --foreground: 230 70% 18%;         /* Midnight #0b1957 */
+  :root {
+    /* BACKGROUND */
+    --background: 235 100% 96%;
+    --foreground: 230 80% 14%;
 
-  /* CARD */
-  --card: 0 0% 100%;
-  --card-foreground: 230 70% 18%;
+    /* CARD */
+    --card: 0 0% 100%;
+    --card-foreground: 230 80% 14%;
 
-  /* PRIMARY (MAIN BRAND COLOR) */
-  --primary: 222 50% 51%;            /* Sapphire #426bc2 */
-  --primary-foreground: 0 0% 100%;
+    /* PRIMARY */
+    --primary: 260 70% 45%; /* Dark purple tone */
+    --primary-foreground: 0 0% 100%;
 
-  /* SECONDARY */
-  --secondary: 276 35% 80%;          /* Lavender #d2b3db */
-  --secondary-foreground: 230 70% 18%;
+    /* UI */
+    --secondary: 260 60% 90%;
+    --accent: 260 60% 92%;
 
-  /* ACCENT */
-  --accent: 280 30% 90%;             /* Petal #e8d9ed */
-  --accent-foreground: 230 70% 18%;
+    --muted: 230 60% 95%;
+    --muted-foreground: 230 35% 40%;
 
-  /* EXTRA UI */
-  --muted: 210 60% 95%;              /* Bridal Blue #e9f3ff */
-  --muted-foreground: 230 40% 35%;
+    --border: 230 35% 88%;
+    --input: 230 35% 92%;
+    --ring: 260 70% 45%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 230 70% 18%;
+    --radius: 0.75rem;
+  }
 
-  --border: 230 30% 85%;
-  --input: 230 30% 85%;
-  --ring: 222 50% 51%;
-
-  --destructive: 0 84% 60%;
-  --success: 142 70% 45%;
-  --warning: 38 92% 50%;
-
-  --radius: 0.75rem;
-
-}
   * {
     @apply border-border;
   }
@@ -59,46 +47,23 @@
 /* ================= COMPONENTS ================= */
 
 @layer components {
-  /* Glass card */
-  .glass-card {
-    @apply bg-card/70 backdrop-blur-xl border border-border/50 rounded-2xl;
-  }
-
-  /* Buttons */
+  /* Primary Button */
   .btn-primary {
-    @apply bg-primary text-primary-foreground font-semibold rounded-xl
-           px-4 py-3 transition-all duration-200;
+    @apply bg-white text-[hsl(var(--primary))] font-semibold
+           rounded-xl px-4 py-3
+           transition-all duration-200;
   }
 
   .btn-primary:hover {
-    @apply scale-[1.02];
+    @apply bg-white/90;
   }
 
-  .btn-secondary {
-    @apply bg-secondary text-secondary-foreground rounded-xl
-           px-4 py-3 transition-all;
-  }
-
-  /* Inputs (LOGIN ISSUE FIXED HERE) */
+  /* Input fields */
   .input-field {
-    @apply bg-input text-foreground border border-border/50
-           rounded-xl px-4 py-3
-           placeholder:text-muted-foreground
-           focus:outline-none focus:ring-2 focus:ring-primary/50;
-  }
-
-  /* Stats */
-  .stat-card {
-    @apply glass-card p-4;
-  }
-
-  /* Badges */
-  .badge-success {
-    @apply bg-success/20 text-success px-2 py-1 rounded-full text-xs;
-  }
-
-  .badge-error {
-    @apply bg-destructive/20 text-destructive px-2 py-1 rounded-full text-xs;
+    @apply w-full px-4 py-3 rounded-xl
+           bg-white/90 text-gray-900
+           placeholder:text-gray-400
+           focus:outline-none focus:ring-2 focus:ring-primary/40;
   }
 }
 
@@ -106,25 +71,85 @@
 
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.4s ease-in-out;
+    animation: fadeIn 0.5s ease forwards;
   }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+ 
+}
 
-  .scrollbar-hide {
-    scrollbar-width: none;
-  }
+/* ================= LOGIN PAGE ================= */
 
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+/* Background image */
+.login-bg {
+  position: fixed;
+  inset: 0;
+  background-image: url('/login-bg.png');
+  background-size: cover;
+  background-position: left center; /* keeps space on right */
+  z-index: 0;
+  filter: contrast(1.08) saturate(1.05);
+}
+
+
+
+/* Centered login container */
+.login-center {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* Login card — DARK PURPLE (your reference image) */
+/* CARD — REFINED GLASS PURPLE */
+/* === LOGIN CARD — TRUE GLASS PURPLE === */
+.login-glass {
+  width: 480px;
+  padding: 2.5rem;
+  border-radius: 22px;
+
+  /* translucent purple glass */
+  background: linear-gradient(
+    160deg,
+    rgba(109, 40, 217, 0.55),
+    rgba(124, 58, 237, 0.45)
+  );
+
+  /* REAL glass effect */
+ /* ✅ balanced glass blur */
+backdrop-filter: blur(36px) saturate(180%);
+-webkit-backdrop-filter: blur(36px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+  color: white;
+}
+
+@keyframes cardRise {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Improve readability on glass */
+.login-glass label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.login-glass input {
+  background: rgba(255, 255, 255, 0.92);
+  color: #4c1d95; /* deep purple text */
+}
+
+.login-glass input::placeholder {
+  color: #7c3aed;
 }

@@ -3,9 +3,8 @@ import { Send, ExternalLink, CheckCircle } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
-const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
-
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`; // ✅ BACKEND SAME
 
 interface Vendor {
   id: number;
@@ -24,7 +23,6 @@ const StudentPay: React.FC = () => {
   const [wallet, setWallet] = useState("");
   const [loading, setLoading] = useState(false);
   const [fetchingBalance, setFetchingBalance] = useState(true);
-
   const [txResult, setTxResult] = useState<any>(null);
 
   const quickAmounts = [50, 100, 200, 500];
@@ -92,30 +90,40 @@ const StudentPay: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 w-full max-w-none">
+    <div className="space-y-8">
 
-      <h1 className="text-2xl font-bold">Pay Vendor</h1>
+      {/* HEADER */}
+      <div>
+        <h1 className="text-2xl font-semibold text-slate-800">
+          Pay Vendor
+        </h1>
+        <p className="text-sm text-slate-500">
+          Send tokens securely to campus vendors
+        </p>
+      </div>
 
-      {/* BALANCE */}
-      <div className="glass-card p-6">
-        <p className="text-sm text-muted-foreground">Available Balance</p>
+      {/* BALANCE CARD */}
+      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-2xl shadow-lg">
+        <p className="text-sm opacity-80">Available Balance</p>
         {fetchingBalance ? (
-          <div className="h-8 w-28 bg-secondary/30 animate-pulse rounded-md" />
+          <div className="h-8 w-28 bg-white/30 animate-pulse rounded-md mt-2" />
         ) : (
-          <p className="text-3xl font-bold">{balance} KGCT</p>
+          <p className="text-3xl font-bold mt-1">{balance} KGCT</p>
         )}
       </div>
 
-      {/* PAYMENT BOX */}
-      <div className="glass-card p-10 space-y-8 w-full lg:min-h-[70vh]">
+      {/* PAYMENT CARD */}
+      <div className="bg-white p-8 rounded-2xl shadow-md space-y-6">
 
         {!txResult ? (
           <>
-            {/* VENDOR */}
+            {/* Vendor Select */}
             <div>
-              <label className="text-sm font-medium">Select Vendor</label>
+              <label className="text-sm font-medium text-slate-700">
+                Select Vendor
+              </label>
               <select
-                className="input-field mt-2"
+                className="w-full mt-2 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
                 value={selectedVendor?.id || ""}
                 onChange={(e) => {
                   const v = vendors.find(x => x.id === Number(e.target.value));
@@ -132,65 +140,74 @@ const StudentPay: React.FC = () => {
             </div>
 
             {selectedVendor && (
-              <div className="p-3 bg-secondary/30 rounded-xl">
-                <p className="text-xs text-muted-foreground">Vendor Wallet</p>
+              <div className="p-4 bg-slate-100 rounded-xl">
+                <p className="text-xs text-slate-500">Vendor Wallet</p>
                 <p className="font-mono text-sm break-all">
                   {selectedVendor.wallet_address}
                 </p>
               </div>
             )}
 
-            {/* AMOUNT */}
+            {/* Amount */}
             <div>
-              <label className="text-sm font-medium">Amount</label>
+              <label className="text-sm font-medium text-slate-700">
+                Amount
+              </label>
               <input
                 type="number"
-                className="input-field mt-2"
+                className="w-full mt-2 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
                 placeholder="Enter amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
               />
             </div>
 
-            {/* QUICK */}
+            {/* Quick Buttons */}
             <div className="flex gap-3 flex-wrap">
               {quickAmounts.map((q) => (
                 <button
                   key={q}
                   onClick={() => setAmount(String(q))}
-                  className="btn-secondary"
+                  className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition"
                 >
                   {q} KGCT
                 </button>
               ))}
             </div>
 
-            {/* PAY */}
+            {/* Pay Button */}
             <button
               onClick={handlePay}
               disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 py-3 text-lg"
+              className="w-full py-3 rounded-xl font-semibold 
+                         bg-purple-600 text-white 
+                         hover:bg-purple-700 transition
+                         flex items-center justify-center gap-2"
             >
-              {loading ? <LoadingSpinner size="sm" /> : (
+              {loading ? (
+                <LoadingSpinner size="sm" />
+              ) : (
                 <>
-                  <Send className="w-5 h-5" /> Pay Now
+                  <Send size={18} />
+                  Pay Now
                 </>
               )}
             </button>
           </>
         ) : (
-          /* SUCCESS BOX (ADMIN MINT மாதிரி) */
-          <div className="space-y-5 text-center">
-            <CheckCircle className="w-16 h-16 mx-auto text-success" />
-
-            <p className="text-xl font-bold">Payment Successful</p>
-            <p>{txResult.amount} KGCT transferred</p>
+          /* SUCCESS UI */
+          <div className="text-center space-y-5">
+            <CheckCircle className="w-16 h-16 mx-auto text-green-500" />
+            <h2 className="text-xl font-semibold">
+              Payment Successful 🎉
+            </h2>
+            <p className="text-slate-600">
+              {txResult.amount} KGCT transferred
+            </p>
 
             <button
-              onClick={() =>
-                window.open(txResult.explorer, "_blank")
-              }
-              className="btn-secondary w-full flex justify-center gap-2"
+              onClick={() => window.open(txResult.explorer, "_blank")}
+              className="w-full py-3 rounded-xl bg-slate-100 hover:bg-slate-200 transition flex justify-center gap-2"
             >
               <ExternalLink size={16} />
               View on Polygon Amoy
@@ -198,13 +215,12 @@ const StudentPay: React.FC = () => {
 
             <button
               onClick={() => setTxResult(null)}
-              className="btn-primary w-full"
+              className="w-full py-3 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition"
             >
               Make Another Payment
             </button>
           </div>
         )}
-
       </div>
     </div>
   );

@@ -34,18 +34,7 @@ const WalletCard: React.FC<WalletCardProps> = ({
     <div className="glass-card-glow p-6 animate-fade-in">
       <div className="relative z-10">
         
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
-              <Wallet className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Campus Wallet</p>
-              {name && <p className="font-semibold">{name}</p>}
-            </div>
-          </div>
-        </div>
+    
 
         {/* Balance Section */}
         <div className="mb-6">

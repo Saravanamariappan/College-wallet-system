@@ -18,32 +18,37 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ activeTab, onTabChange,
     "S";
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 h-screen bg-card/50 border-r border-border/50 fixed left-0 top-0">
-
+    <aside className="
+  hidden lg:flex flex-col w-64 h-screen
+  bg-gradient-to-b from-purple-700 via-purple-800 to-purple-900
+  text-white
+  fixed left-0 top-0
+  p-5
+">
       {/* Logo */}
-      <div className="p-6 border-b border-border/30">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-            <Hexagon className="w-6 h-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="font-bold gradient-text">CampusPay</h1>
-            <p className="text-xs text-muted-foreground">Blockchain Wallet</p>
-          </div>
-        </div>
-      </div>
+      <div className="flex items-center gap-3 px-5 py-6 border-b border-white/10">
+  <img
+    src="/logo.png"
+    alt="KGISL Logo"
+    className="h-8 w-8 object-contain"
+  />
+  <h2 className="text-lg font-semibold tracking-wide">
+    KGISL Wallet
+  </h2>
+</div>
+            
 
       {/* User Info */}
-      <div className="p-4 border-b border-border/30">
+      <div className="px-5 py-4 border-b border-white/10">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground font-semibold">
             {initial}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-medium truncate">
+            <p className="font-medium truncate text-white">
               {user?.email || "User"}
             </p>
-            <p className="text-xs text-muted-foreground capitalize">
+            <p className="text-xs text-purple-200 capitalize">
               {user?.role?.toLowerCase()}
             </p>
           </div>
@@ -51,16 +56,16 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ activeTab, onTabChange,
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 px-4 py-4 space-y-2">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-              activeTab === tab.id
-                ? 'bg-primary/20 text-primary'
-                : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-            }`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+  activeTab === tab.id
+    ? 'bg-white/20 text-white font-medium'
+    : 'text-purple-100 hover:bg-white/15 hover:text-white'
+}`}
           >
             {tab.icon}
             <span className="font-medium">{tab.label}</span>
@@ -69,14 +74,18 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ activeTab, onTabChange,
       </nav>
 
       {/* Logout */}
-      <div className="p-4 border-t border-border/30">
+      <div className="px-5 py-4 border-t border-white/10">
         <button
-          onClick={logout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200"
-        >
-          <LogOut className="w-5 h-5" />
-          <span className="font-medium">Logout</span>
-        </button>
+  onClick={logout}
+  className="mt-4 flex items-center gap-3 px-4 py-3 rounded-xl
+             text-red-300 hover:bg-red-500/10 hover:text-red-200 transition"
+>
+  <LogOut size={18} />
+  <span>Logout</span>
+</button>
+                <p className="text-xs text-center text-gray-400 mt-4">
+                  © KGISL Wallet System
+                </p>
       </div>
     </aside>
   );
