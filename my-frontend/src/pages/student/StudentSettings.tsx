@@ -149,16 +149,6 @@ const StudentSettings: React.FC = () => {
         </div>
       </div>
 
-      {/* SECURITY INFO */}
-      <div className="glass-card p-4">
-        <h3 className="font-semibold mb-2">Security Tips</h3>
-        <ul className="text-sm text-muted-foreground space-y-1 list-disc pl-5">
-          <li>Never share your private key</li>
-          <li>Do not store screenshots of private key</li>
-          <li>Use wallet only on trusted devices</li>
-        </ul>
-      </div>
-
       {/* LOGOUT */}
       <button
         onClick={logout}
