@@ -69,27 +69,30 @@ const Login: React.FC = () => {
 
       {/* 🔷 Branding Left Side (From First UI) */}
       <div className="absolute left-10 top-10 flex items-center gap-4 z-10">
-        <div className="w-14 h-14 rounded-2xl bg-purple-200 flex items-center justify-center">
-          <Hexagon className="w-8 h-8 text-purple-600" />
-        </div>
+        <img
+            src="/logo.png"
+            alt="KGiSL Logo"
+            className="h-8 w-8 object-contain"
+          />
+        
         <div>
           <h1 className="text-2xl font-bold text-purple-700">
-            CampusPay
+            KGPay
           </h1>
           <p className="text-sm text-purple-500">
-            Blockchain Wallet System
+            KGISL Governance
           </p>
         </div>
       </div>
 
-      {/* 🎯 Centered Login Card */}
-      <div className="relative z-10 flex min-h-screen items-center justify-end px-6 md:px-20">
-        <div className="backdrop-blur-xl bg-white/30 border border-white/40 shadow-2xl rounded-3xl w-[480px] p-8 animate-fade-in">
-
-          <h3 className="text-2xl font-semibold mb-1 text-purple-800">
+     <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-white/20 to-white/60" />
+      {/* 🎯 Centered Login */}
+      <div className="relative z-10 flex min-h-screen items-center justify-end px-6  md:px-20">
+        <div className="login-glass animate-card-rise w-[480px] p-6">
+          <h3 className="text-2xl font-semibold mb-1 text-white">
             Welcome Back
           </h3>
-          <p className="text-purple-600 mb-8">
+          <p className="text-white/80 mb-8">
             Sign in to your account
           </p>
 
@@ -102,14 +105,14 @@ const Login: React.FC = () => {
                 onClick={() => setRole(r.id)}
                 className={`p-4 rounded-xl border transition-all ${
                   role === r.id
-                    ? 'border-purple-600 bg-purple-100'
-                    : 'border-white/40 bg-white/20'
+                    ? 'border-white bg-white/20'
+                    : 'border-white/20 bg-white/10'
                 }`}
               >
-                <div className="w-10 h-10 mx-auto mb-2 rounded-xl bg-white/40 flex items-center justify-center text-purple-700">
+                <div className="w-10 h-10 mx-auto mb-2 rounded-xl bg-white/20 flex items-center justify-center text-white">
                   {r.icon}
                 </div>
-                <p className="text-sm font-medium text-purple-800">
+                <p className="text-sm font-medium text-white">
                   {r.label}
                 </p>
               </button>
@@ -119,19 +122,19 @@ const Login: React.FC = () => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm mb-2 text-purple-700">
+              <label className="block text-sm mb-2 text-white/90">
                 Email
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl px-4 py-3 bg-white text-purple-900 focus:outline-none shadow"
+                className="w-full rounded-xl px-4 py-3 bg-white text-purple-900 focus:outline-none "
               />
             </div>
 
             <div>
-              <label className="block text-sm mb-2 text-purple-700">
+              <label className="block text-sm mb-2 text-white/90">
                 Password
               </label>
               <div className="relative">
@@ -139,7 +142,7 @@ const Login: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-xl px-4 py-3 bg-white text-purple-900 pr-12 focus:outline-none shadow"
+                  className="w-full rounded-xl px-4 py-3 bg-white text-purple-900 pr-12 focus:outline-none"
                 />
                 <button
                   type="button"
@@ -156,8 +159,8 @@ const Login: React.FC = () => {
               type="submit"
               disabled={loading}
               className="w-full py-4 rounded-xl font-semibold
-                         bg-purple-600 text-white
-                         hover:bg-purple-700 transition
+                         bg-white text-purple-700
+                         hover:bg-purple-50 transition
                          flex items-center justify-center gap-2"
             >
               {loading ? (
