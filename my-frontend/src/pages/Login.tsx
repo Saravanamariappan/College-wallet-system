@@ -61,7 +61,7 @@ const Login: React.FC = () => {
 
       {/* 🖼 Optional Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-left"
+        className="absolute inset-0 bg-cover bg-left "
         style={{ backgroundImage: "url('/login-bg.png')" }}
       />
 
@@ -70,18 +70,18 @@ const Login: React.FC = () => {
       {/* 🔷 Branding Left Side (From First UI) */}
       <div className="absolute left-10 top-10 flex items-center gap-4 z-10">
         <img
-            src="/logo.png"
-            alt="KGiSL Logo"
-            className="h-8 w-8 object-contain"
-          />
+  src="/logo.png"
+  alt="KGiSL Logo"
+  className="h-10 w-10 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
+/>
         
         <div>
-          <h1 className="text-2xl font-bold text-purple-700">
-            KGPay
-          </h1>
-          <p className="text-sm text-purple-500">
-            KGISL Governance
-          </p>
+          <h1 className="text-3xl font-extrabold text-purple-700 leading-tight">
+    KGPay
+  </h1>
+  <p className="text-base text-purple-500">
+    KGiSL Governance
+  </p>
         </div>
       </div>
 
