@@ -32,6 +32,7 @@ const AdminTokenManager: React.FC = () => {
   const [mintHistory, setMintHistory] = useState<any[]>([]);
   const [sendHistory, setSendHistory] = useState<any[]>([]);
   const [totalMinted, setTotalMinted] = useState<number>(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const quickAmounts = [100, 500, 1000, 5000];
 
@@ -180,6 +181,13 @@ const AdminTokenManager: React.FC = () => {
 
   /* ================= HISTORY ================= */
   const history = mode === "mint" ? mintHistory : sendHistory;
+
+  const filteredHistory = history.filter((h) => {
+    const searchLow = searchTerm.toLowerCase();
+    const wallet = (h.student_wallet || h.receiver_wallet || "").toLowerCase();
+    const amount = (h.amount || "").toString();
+    return wallet.includes(searchLow) || amount.includes(searchLow);
+  });
 
   return (
 
@@ -365,26 +373,38 @@ const AdminTokenManager: React.FC = () => {
             }
           </h4>
 
+          {/* SEARCH BOX */}
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search by wallet or amount..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="input-field w-full text-sm py-2"
+            />
+          </div>
+
           <div className="max-h-60 overflow-y-auto space-y-2">
 
-            {history.map((h) => (
-
-              <div
-                key={h.id}
-                className="p-3 bg-secondary/20 rounded-lg"
-              >
-
-                <div className="text-xs font-mono break-all">
-                  {h.student_wallet || h.receiver_wallet}
+            {filteredHistory.length > 0 ? (
+              filteredHistory.map((h) => (
+                <div
+                  key={h.id}
+                  className="p-3 bg-secondary/20 rounded-lg"
+                >
+                  <div className="text-xs font-mono break-all">
+                    {h.student_wallet || h.receiver_wallet}
+                  </div>
+                  <div className="font-semibold text-success">
+                    ₹{h.amount}
+                  </div>
                 </div>
-
-                <div className="font-semibold text-success">
-                  ₹{h.amount}
-                </div>
-
+              ))
+            ) : (
+              <div className="text-center py-4 text-secondary/60 italic">
+                No matching records
               </div>
-
-            ))}
+            )}
 
           </div>
 
