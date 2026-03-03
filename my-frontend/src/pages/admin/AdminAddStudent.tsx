@@ -241,7 +241,7 @@ const AdminAddStudent = () => {
                     {s.name?.charAt(0)}
                   </div>
 
-                  <div className="flex-1">
+                  <div className="flex-1 md:ml-64">
                     <p className="font-medium">{s.name}</p>
                     <p className="font-mono text-xs break-all">{s.wallet_address}</p>
                   </div>

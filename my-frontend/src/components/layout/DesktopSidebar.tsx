@@ -19,7 +19,7 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ activeTab, onTabChange,
 
   return (
     <aside className="
-  hidden lg:flex flex-col w-64 h-screen
+  hidden md:flex flex-col w-64 h-screen
   bg-gradient-to-b from-purple-700 via-purple-800 to-purple-900
   text-white
   fixed left-0 top-0
