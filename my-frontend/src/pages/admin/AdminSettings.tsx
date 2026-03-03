@@ -120,7 +120,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ onNavigate }) => {
       {/* HEADER */}
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold mb-1">
-          Admin Settings
+    
         </h1>
         <p className="text-muted-foreground">
           System configuration

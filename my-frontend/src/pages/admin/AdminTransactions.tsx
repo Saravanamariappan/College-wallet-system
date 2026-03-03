@@ -43,7 +43,7 @@ const AdminTransactions: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold mb-1">
-          All Transactions
+        
         </h1>
         <p className="text-muted-foreground">
           System-wide transaction history
