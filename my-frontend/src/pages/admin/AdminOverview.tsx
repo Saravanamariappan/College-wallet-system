@@ -87,7 +87,7 @@ const AdminOverview: React.FC = () => {
     /* 🔥 PAGE SCROLL REMOVED */
     <div className="space-y-5 overflow-hidden">
 
-      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+      <h1 className="text-3xl font-bold"></h1>
 
       {/* STATS */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

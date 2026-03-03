@@ -94,7 +94,7 @@ const AdminManageUsers: React.FC = () => {
     <div className="space-y-6">
 
       <h1 className="text-2xl font-bold text-center">
-        Admin User Control Panel
+       
       </h1>
 
       {/* ================= SEARCH BAR ================= */}

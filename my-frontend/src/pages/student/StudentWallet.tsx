@@ -71,9 +71,9 @@ const StudentWallet: React.FC = () => {
           <Wallet className="text-primary w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold">My Wallet</h1>
+          <h1 className="text-3xl font-bold">Student Wallet</h1>
           <p className="text-sm text-muted-foreground">
-            Manage your student transactions
+             Student transactions only managed here...
           </p>
         </div>
       </div>

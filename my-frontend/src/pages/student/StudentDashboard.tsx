@@ -2,9 +2,9 @@ import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Wallet, Send, History, Settings, LogOut } from "lucide-react";
 import { useAuth } from '@/context/AuthContext';
-
 const StudentDashboard: React.FC = () => {
   const { logout } = useAuth(); // ✅ Backend same
+  
 
   return (
     <div className="flex min-h-screen bg-slate-100">
@@ -22,7 +22,7 @@ const StudentDashboard: React.FC = () => {
             className="h-8 w-8 object-contain"
           />
           <h2 className="text-lg font-semibold tracking-wide">
-            KGiSL Wallet
+            Student Wallet
           </h2>
         </div>
 
@@ -62,7 +62,7 @@ const StudentDashboard: React.FC = () => {
               Welcome back 👋
             </h1>
             <p className="text-sm text-slate-500">
-              Manage your wallet and transactions
+              Manage your wallet and transactions Here
             </p>
           </div>
         </div>

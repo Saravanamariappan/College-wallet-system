@@ -85,7 +85,7 @@ const StudentSettings: React.FC = () => {
 
         {/* ADDRESS */}
         <div className="p-3 bg-secondary/50 rounded-lg">
-          <p className="text-xs mb-1">Wallet Address</p>
+          <p className="text-xs mb-1">Wallet Address (Public Key)</p>
           <div className="flex items-center justify-between gap-3">
             <p className="font-mono text-sm break-all">{user?.walletAddress}</p>
             <button onClick={() => copyToClipboard(user?.walletAddress, 'address')}>
@@ -127,7 +127,7 @@ const StudentSettings: React.FC = () => {
         <div className="flex flex-col gap-3">
           <input
             type="password"
-            placeholder="Old Password (optional if admin)"
+            placeholder="Old Password"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
             className="input input-bordered w-full"
