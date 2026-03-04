@@ -118,11 +118,18 @@ const VendorWallet: React.FC = () => {
       </div>
 
       {/* Wallet Card */}
+      <div className="bg-white/20 
+                backdrop-blur-md 
+                border border-white/30 
+                rounded-2xl 
+                p-6 
+                shadow-lg">
       <WalletCard
         address={wallet}
         balance={balance}
         name={user?.name ?? "Vendor"}
       />
+      </div>
 
       {/* Stats Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

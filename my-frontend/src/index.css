@@ -153,3 +153,88 @@ backdrop-filter: blur(36px) saturate(180%);
 .login-glass input::placeholder {
   color: #7c3aed;
 }
+
+.button {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  width: 90%;
+  border: #7c3aed solid 0.15em; /* violet-600 */
+  border-radius: 0.75em;
+  color: #7c3aed; /* violet text */
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border 300ms, color 300ms, background 300ms;
+  user-select: none;
+  background: white;
+}
+
+.button span {
+  z-index: 2;
+  position: relative;
+}
+
+.button {
+  color: #7c3aed; /* Force violet text */
+}
+
+.button span {
+  color: #7c3aed; /* Ensure both Sign In & Signing in stay violet */
+  position: relative;
+  z-index: 2;
+}
+
+.button:active {
+  border-color: #5b21b6; /* darker violet */
+}
+
+.button::after,
+.button::before {
+  content: "";
+  position: absolute;
+  width: 12em;
+  aspect-ratio: 1;
+  background: #a78bfa; /* lavender-400 */
+  opacity: 0.4;
+  border-radius: 50%;
+  transition: transform 500ms ease, background 300ms;
+}
+
+.button::before {
+  left: 0;
+  transform: translateX(-10em);
+}
+
+.button::after {
+  right: 0;
+  transform: translateX(10em);
+}
+
+.button:hover::before {
+  transform: translateX(-2em);
+}
+
+.button:hover::after {
+  transform: translateX(2em);
+}
+
+.button:hover::before,
+.button:hover::after {
+  background: #7c3aed; /* violet fill on hover */
+}
+
+.button:active::before,
+.button:active::after {
+  background: #5b21b6;
+}
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}

@@ -43,15 +43,15 @@ const VendorHistory: React.FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="glass-card p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+        <div className="glass-card p-4 rounded-lg">
           <p>Total Received</p>
           <p className="text-2xl font-bold text-success">
             ₹{totalReceived}
           </p>
         </div>
 
-        <div className="glass-card p-4">
+        <div className="glass-card p-4 rounded-lg">
           <p>Successful Transactions</p>
           <p className="text-2xl font-bold">
             {successfulTx}
@@ -60,6 +60,7 @@ const VendorHistory: React.FC = () => {
       </div>
 
       <TransactionTable transactions={transactions} showTo={false} />
+
     </div>
   );
 };

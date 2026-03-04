@@ -206,7 +206,7 @@ const AdminTokenManager: React.FC = () => {
             setMode("mint");
             setResult(null);
           }}
-          className={`px-6 py-2 rounded-xl flex items-center gap-2
+          className={`px-6 py-2 rounded-lg flex items-center gap-2
           ${mode === "mint"
               ? "bg-primary text-white"
               : "bg-secondary/30"
@@ -221,7 +221,7 @@ const AdminTokenManager: React.FC = () => {
             setMode("send");
             setResult(null);
           }}
-          className={`px-6 py-2 rounded-xl flex items-center gap-2
+          className={`px-6 py-2 rounded-lg flex items-center gap-2
           ${mode === "send"
               ? "bg-primary text-white"
               : "bg-secondary/30"
@@ -239,7 +239,7 @@ const AdminTokenManager: React.FC = () => {
 
         {/* ================= FORM ================= */}
 
-        <div className="glass-card p-6 space-y-4">
+        <div className="glass-card p-6 space-y-4 rounded-lg">
 
           <h3 className="font-semibold flex gap-2 items-center">
 
@@ -355,11 +355,11 @@ const AdminTokenManager: React.FC = () => {
 
         {/* ================= HISTORY ================= */}
 
-        <div className="glass-card p-6 space-y-4">
+        <div className="glass-card p-6 space-y-4 rounded-lg">
 
           {mode === "mint" && (
 
-            <div className="flex justify-between bg-secondary/30 p-3 rounded-xl">
+            <div className="flex justify-between bg-secondary/30 p-3 rounded-lg">
               <span>Total Minted</span>
               <b>₹{totalMinted}</b>
             </div>

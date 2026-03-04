@@ -70,14 +70,24 @@ const StudentSettings: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
 
       {/* PROFILE */}
-      <div className="glass-card p-4">
+      <div className="bg-white/20 
+                backdrop-blur-md 
+                border border-white/30 
+                rounded-2xl 
+                p-6 
+                shadow-lg">
         <h3 className="text-xl font-semibold mb-1">{safeName}</h3>
         <p className="text-muted-foreground">{user?.email}</p>
         <p className="text-xs mt-1">ID: {user?.id}</p>
       </div>
 
       {/* WALLET */}
-      <div className="glass-card p-4">
+      <div className="bg-white/20 
+                backdrop-blur-md 
+                border border-white/30 
+                rounded-2xl 
+                p-6 
+                shadow-lg">
         <h3 className="font-semibold mb-3 flex items-center gap-2">
           <Key className="w-5 h-5" />
           Wallet
@@ -118,7 +128,12 @@ const StudentSettings: React.FC = () => {
       </div>
 
       {/* CHANGE PASSWORD */}
-      <div className="glass-card p-4">
+      <div className="bg-white/20 
+                backdrop-blur-md 
+                border border-white/30 
+                rounded-2xl 
+                p-6 
+                shadow-lg">
         <h3 className="font-semibold mb-3 flex items-center gap-2">
           <Key className="w-5 h-5" />
           Change Password
@@ -151,12 +166,23 @@ const StudentSettings: React.FC = () => {
 
       {/* LOGOUT */}
       <button
-        onClick={logout}
-        className="w-full glass-card p-4 flex items-center justify-center gap-2 text-destructive"
-      >
-        <LogOut className="w-5 h-5" />
-        Logout
-      </button>
+  onClick={logout}
+  className="w-full 
+             bg-white 
+             border border-red-200 
+             rounded-xl 
+             p-3 
+             flex items-center justify-center gap-2 
+             text-red-500 
+             font-medium
+             shadow-sm
+             hover:bg-red-50 
+             hover:border-red-300
+             transition"
+>
+  <LogOut className="w-5 h-5" />
+  Logout
+</button>
     </div>
   );
 };

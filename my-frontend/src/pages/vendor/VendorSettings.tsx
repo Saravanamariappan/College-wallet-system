@@ -47,7 +47,7 @@ const VendorSettings: React.FC = () => {
       </div>
 
       {/* Profile Card */}
-      <div className="glass-card p-4 lg:p-6">
+      <div className="glass-card p-4 lg:p-6 rounded-lg">
         <div className="flex items-center gap-4 mb-6">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-pink-500 flex items-center justify-center">
             <Store className="w-8 h-8 text-white" />
@@ -62,7 +62,7 @@ const VendorSettings: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="p-4 bg-secondary/50 rounded-xl">
+          <div className="p-4 bg-secondary/50 rounded-lg">
             <p className="text-sm text-muted-foreground mb-1">Vendor ID</p>
             <p className="font-mono">{vendor?.id}</p>
           </div>
@@ -70,8 +70,8 @@ const VendorSettings: React.FC = () => {
       </div>
 
       {/* Wallet Details */}
-      <div className="glass-card p-4 lg:p-6">
-        <h3 className="font-semibold mb-4 flex items-center gap-2">
+      <div className="glass-card p-4 lg:p-6 rounded-lg">
+        <h3 className="font-semibold mb-4 flex items-center gap-2 ">
           <Key className="w-5 h-5 text-primary" />
           Wallet Details
         </h3>
@@ -94,7 +94,7 @@ const VendorSettings: React.FC = () => {
           </div>
 
           {/* Private Key */}
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-xl">
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm text-destructive font-medium flex items-center gap-2">
                 <Shield className="w-4 h-4" />
@@ -128,15 +128,26 @@ const VendorSettings: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Logout */}
-      <button
+      {/* LOGOUT */}
+            <button
         onClick={logout}
-        className="w-full glass-card p-4 flex items-center justify-center gap-2 text-destructive hover:bg-destructive/10 transition-colors"
+        className="w-full 
+                   bg-white 
+                   border border-red-200 
+                   rounded-xl 
+                   p-3 
+                   flex items-center justify-center gap-2 
+                   text-red-500 
+                   font-medium
+                   shadow-sm
+                   hover:bg-red-50 
+                   hover:border-red-300
+                   transition"
       >
         <LogOut className="w-5 h-5" />
-        <span className="font-medium">Logout</span>
+        Logout
       </button>
+      
     </div>
   );
 };

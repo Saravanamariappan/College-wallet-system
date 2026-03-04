@@ -79,11 +79,20 @@ const StudentWallet: React.FC = () => {
       </div>
 
       {/* Wallet Card */}
-      <WalletCard
-        address={walletAddress}
-        balance={balance}
-        name={user?.email}
-      />
+      <div className="bg-white/20 
+                backdrop-blur-md 
+                border border-white/30 
+                rounded-2xl 
+                p-6 
+                shadow-lg">
+
+  <WalletCard
+    address={walletAddress}
+    balance={balance}
+    name={user?.email}
+  />
+
+</div>
 
       {/* Stats Section */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

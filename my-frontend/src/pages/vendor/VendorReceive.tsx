@@ -88,7 +88,7 @@ const VendorPayAdmin: React.FC = () => {
 
       /* ✅ SMALL SUCCESS CARD (like image) */
       toast.custom(() => (
-        <div className="bg-background border border-green-500/30 rounded-xl p-4 w-[320px] text-center space-y-2">
+        <div className="bg-background border border-green-500/30 rounded-lg p-4 w-[320px] text-center space-y-2">
           <CheckCircle className="mx-auto text-green-400" size={32} />
           <p className="font-semibold">Payment Successful</p>
           <p className="text-sm text-muted-foreground">
@@ -123,32 +123,37 @@ const VendorPayAdmin: React.FC = () => {
       <div className="grid lg:grid-cols-2 gap-6">
 
         {/* LEFT */}
-        <div className="glass-card p-6 space-y-4">
-          <div className="flex justify-between bg-secondary/30 p-3 rounded-xl">
-            <span>Balance</span>
-            <b>{balance} KGCT</b>
-          </div>
+<div className="glass-card p-6 rounded-lg flex flex-col h-full">
 
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="input-field"
-            placeholder="Enter amount"
-          />
+  <div className="space-y-4">
+    <div className="flex justify-between bg-secondary/30 p-3 rounded-lg">
+      <span>Balance</span>
+      <b>{balance} KGCT</b>
+    </div>
 
-          <button
-            onClick={handlePay}
-            disabled={loading}
-            className="btn-primary w-full flex items-center justify-center gap-2"
-          >
-            {loading ? <LoadingSpinner size="sm" /> : <Send size={16} />}
-            Pay Admin
-          </button>
-        </div>
+    <input
+      type="number"
+      value={amount}
+      onChange={(e) => setAmount(e.target.value)}
+      className="input-field"
+      placeholder="Enter amount"
+    />
+  </div>
+
+  {/* Push Button to Bottom */}
+  <button
+    onClick={handlePay}
+    disabled={loading}
+    className="btn-primary w-full flex items-center justify-center gap-2 mt-auto"
+  >
+    {loading ? <LoadingSpinner size="sm" /> : <Send size={16} />}
+    Pay Admin
+  </button>
+
+</div>
 
         {/* RIGHT – COMPACT HISTORY (like image) */}
-        <div className="glass-card p-4 space-y-2">
+        <div className="glass-card p-4 space-y-2 rounded-lg">
           <h3 className="font-semibold">Payment History</h3>
 
           {history.length === 0 && (
