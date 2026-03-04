@@ -142,19 +142,19 @@ const AdminAddStudent = () => {
     <div className="space-y-6 animate-fade-in">
       <h1 className="text-3xl font-bold"></h1>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-6 rounded-lg">
         {/* LEFT PANEL */}
-        <div className="glass-card p-6">
+        <div className="glass-card p-6 rounded-lg">
           <div className="flex gap-2 mb-6">
             <button
-              className={`flex-1 py-3 rounded-xl ${activeTab === "create" ? "bg-primary text-white" : "bg-secondary"}`}
+              className={`flex-1 py-3 rounded-lg ${activeTab === "create" ? "bg-primary text-white" : "bg-secondary"}`}
               onClick={() => setActiveTab("create")}
             >
               Create New
             </button>
 
             <button
-              className={`flex-1 py-3 rounded-xl ${activeTab === "register" ? "bg-primary text-white" : "bg-secondary"}`}
+              className={`flex-1 py-3 rounded-lg ${activeTab === "register" ? "bg-primary text-white" : "bg-secondary"}`}
               onClick={() => setActiveTab("register")}
             >
               Register Existing
@@ -168,9 +168,9 @@ const AdminAddStudent = () => {
               </button>
             ) : (
               <div className="space-y-4">
-                <div className="p-4 bg-green-100 rounded-xl text-center">✓ Wallet Created</div>
+                <div className="p-4 bg-green-100 rounded-lg text-center">✓ Wallet Created</div>
 
-                <div className="p-4 bg-secondary rounded-xl">
+                <div className="p-4 bg-secondary rounded-lg">
                   <div className="flex justify-between">
                     <p>Wallet Address</p>
                     <button onClick={() => copyToClipboard(createdWallet.address, "address")}>
@@ -180,7 +180,7 @@ const AdminAddStudent = () => {
                   <p className="font-mono break-all">{createdWallet.address}</p>
                 </div>
 
-                <div className="p-4 bg-yellow-100 rounded-xl">
+                <div className="p-4 bg-yellow-100 rounded-lg">
                   <div className="flex justify-between">
                     <p>Private Key</p>
                     <button onClick={() => setShowPrivateKey(!showPrivateKey)}>
@@ -216,7 +216,7 @@ const AdminAddStudent = () => {
         </div>
 
         {/* RIGHT PANEL - STUDENTS LIST */}
-        <div className="glass-card p-6">
+        <div className="glass-card p-6 rounded-lg">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <Users />
             Registered Students ({filteredStudents.length})
@@ -236,7 +236,7 @@ const AdminAddStudent = () => {
           ) : (
             <div className="space-y-3 max-h-[400px] overflow-y-auto">
               {filteredStudents.map((s, i) => (
-                <div key={i} className="p-3 bg-secondary rounded-xl flex items-center gap-3">
+                <div key={i} className="p-3 bg-secondary rounded-lg flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary text-white flex items-center justify-center rounded-xl">
                     {s.name?.charAt(0)}
                   </div>

@@ -70,18 +70,15 @@ const AdminManageUsers: React.FC = () => {
   };
 
   /* ================= FILTER LOGIC ================= */
-  const filteredStudents = students.filter(
-    (user) =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredStudents = students.filter((user) =>
+  (user.name || "").toLowerCase().includes(search.toLowerCase()) ||
+  (user.email || "").toLowerCase().includes(search.toLowerCase())
+);
 
-  const filteredVendors = vendors.filter(
-    (user) =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase())
-  );
-
+const filteredVendors = vendors.filter((user) =>
+  (user.name || "").toLowerCase().includes(search.toLowerCase()) ||
+  (user.email || "").toLowerCase().includes(search.toLowerCase())
+);
   if (loading) {
     return (
       <div className="text-center py-10 text-lg font-semibold">

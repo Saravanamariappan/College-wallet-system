@@ -154,24 +154,20 @@ const Login: React.FC = () => {
               </div>
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-4 rounded-xl font-semibold
-                         bg-white text-purple-700
-                         hover:bg-purple-50 transition
-                         flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <LoadingSpinner size="sm" />
-                  <span>Signing in...</span>
-                </>
-              ) : (
-                <span>Sign In</span>
-              )}
-            </button>
+           <button
+  type="submit"
+  disabled={loading}
+  className="button"
+>
+  {loading ? (
+    <>
+      <LoadingSpinner size="sm" />
+      <span>Signing in...</span>
+    </>
+  ) : (
+    <span>Sign In</span>
+  )}
+</button>
           </form>
 
         </div>

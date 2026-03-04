@@ -51,21 +51,21 @@ const AdminTransactions: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="glass-card p-4 text-center">
+        <div className="glass-card p-4 text-center rounded-lg">
           <p className="text-2xl font-bold gradient-text">
             ₹{totalVolume.toLocaleString()}
           </p>
           <p className="text-sm text-muted-foreground">Total Volume</p>
         </div>
 
-        <div className="glass-card p-4 text-center">
+        <div className="glass-card p-4 text-center rounded-lg">
           <p className="text-2xl font-bold text-success">
             {successfulTx}
           </p>
           <p className="text-sm text-muted-foreground">Successful</p>
         </div>
 
-        <div className="glass-card p-4 text-center">
+        <div className="glass-card p-4 text-center rounded-lg">
           <p className="text-2xl font-bold text-warning">
             {failedTx}
           </p>

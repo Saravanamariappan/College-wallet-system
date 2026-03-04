@@ -104,7 +104,7 @@ const AdminOverview: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* LEFT – PAYMENT HISTORY (COMPACT) */}
-        <div className="lg:col-span-2 glass-card p-4 flex flex-col">
+        <div className="lg:col-span-2 glass-card p-4 flex flex-col rounded-lg">
           <h3 className="font-semibold mb-3 text-sm">
             Vendor → Admin Payment History
           </h3>
@@ -148,7 +148,7 @@ const AdminOverview: React.FC = () => {
 
         {/* RIGHT – ADMIN WALLET (COMPACT) */}
         {showWallet && (
-          <div className="glass-card p-4">
+          <div className="glass-card p-4 rounded-lg">
             <h3 className="font-semibold mb-3 flex items-center gap-2 text-sm">
               <Wallet size={16} />
               Admin Wallet

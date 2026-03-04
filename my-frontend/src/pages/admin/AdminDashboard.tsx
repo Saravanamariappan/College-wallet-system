@@ -115,6 +115,7 @@ const AdminDashboard: React.FC = () => {
     if (activeTab === "mint") return <AdminMintTokens />;
     if (activeTab === "transactions") return <AdminTransactions />;
     if (activeTab === "settings") return <AdminSettings onNavigate={setActiveTab} />;
+    console.log("Active tab:", activeTab);
     return <AdminOverview />;
   };
 

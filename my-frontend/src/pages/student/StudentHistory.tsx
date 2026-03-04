@@ -52,14 +52,18 @@ const StudentHistory: React.FC = () => {
         <p className="text-muted-foreground"> Your payment details</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="glass-card p-4">
+      <div className="bg-white/20 
+                backdrop-blur-md 
+                border border-white/30 
+                rounded-2xl 
+                p-6 
+                shadow-lg">
           <p>Total Spent</p>
           <p className="text-2xl font-bold text-destructive">
             ₹{totalSpent}
           </p>
         </div>
-      </div>
+    
 
       <TransactionTable transactions={filteredTransactions} />
     </div>

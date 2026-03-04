@@ -128,7 +128,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ onNavigate }) => {
       </div>
 
       {/* PROFILE CARD */}
-      <div className="glass-card p-4 lg:p-6">
+      <div className="glass-card p-4 lg:p-6 rounded-lg">
 
         <div className="flex items-center gap-4">
 
@@ -157,7 +157,7 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ onNavigate }) => {
       </div>
 
       {/* WALLET CARD */}
-      <div className="glass-card p-4 lg:p-6">
+      <div className="glass-card p-4 lg:p-6 rounded-lg">
 
         <h3 className="font-semibold mb-4 flex items-center gap-2">
           <Key className="w-5 h-5 text-primary" />
@@ -250,16 +250,25 @@ const AdminSettings: React.FC<AdminSettingsProps> = ({ onNavigate }) => {
 
       </div>
 
-      {/* LOGOUT */}
-      <button
-        onClick={logout}
-        className="w-full glass-card p-4 flex items-center justify-center gap-2 text-destructive hover:bg-destructive/10 transition-colors"
-      >
-        <LogOut className="w-5 h-5" />
-        <span className="font-medium">
-          Logout
-        </span>
-      </button>
+     {/* LOGOUT */}
+           <button
+       onClick={logout}
+       className="w-full 
+                  bg-white 
+                  border border-red-200 
+                  rounded-xl 
+                  p-3 
+                  flex items-center justify-center gap-2 
+                  text-red-500 
+                  font-medium
+                  shadow-sm
+                  hover:bg-red-50 
+                  hover:border-red-300
+                  transition"
+     >
+       <LogOut className="w-5 h-5" />
+       Logout
+     </button>
 
     </div>
 

@@ -157,12 +157,12 @@ const AdminAddVendor: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
       <h1 className="text-3xl font-bold"></h1>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-6 rounded-lg">
         {/* LEFT PANEL */}
-        <div className="glass-card p-6">
+        <div className="glass-card p-6 rounded-lg">
           <div className="flex gap-2 mb-6">
             <button
-              className={`flex-1 py-3 rounded-xl ${
+              className={`flex-1 py-3 rounded-lg ${
                 activeTab === "create"
                   ? "bg-primary text-white"
                   : "bg-secondary"
@@ -300,7 +300,7 @@ const AdminAddVendor: React.FC = () => {
         </div>
 
         {/* RIGHT PANEL */}
-        <div className="glass-card p-6">
+        <div className="glass-card p-6  rounded-lg">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <Building2 /> Registered Vendors ({filteredVendors.length})
           </h3>
