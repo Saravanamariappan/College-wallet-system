@@ -1,1 +1,8 @@
-*/node_modules
+node_modules
+
+my-backend/node_modules
+my-backend/.env
+blockchain/node_modules
+blockchain/.env
+my-frontend/node_modules
+my-frontend/.env
