@@ -1,20 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { Wallet, Send, History, Settings, LogOut } from "lucide-react";
-import { useAuth } from '@/context/AuthContext';
+import { Wallet, Send, History, Settings, LogOut, Menu } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+
 const StudentDashboard: React.FC = () => {
-  const { logout } = useAuth(); // ✅ Backend same
-  
+  const { logout } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-slate-100">
 
-      {/* SIDEBAR */}
-      <aside className="w-64 
-        bg-gradient-to-b from-purple-700 via-purple-800 to-purple-900 
-        text-white flex flex-col p-6 shadow-xl">
+      {/* MOBILE OVERLAY */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
-        {/* LOGO + TITLE */}
+      {/* SIDEBAR */}
+      <aside
+        className={`
+        fixed lg:static z-50
+        w-64 h-screen
+        bg-gradient-to-b from-purple-700 via-purple-800 to-purple-900
+        text-white flex flex-col p-6 shadow-xl
+        transform transition-transform duration-300
+
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        lg:translate-x-0
+      `}
+      >
+        {/* LOGO */}
         <div className="flex items-center gap-3 mb-10">
           <img
             src="/logo.png"
@@ -37,7 +54,7 @@ const StudentDashboard: React.FC = () => {
         {/* Divider */}
         <div className="border-t border-white/10 my-4" />
 
-        {/* LOGOUT BUTTON */}
+        {/* LOGOUT */}
         <button
           onClick={logout}
           className="flex items-center gap-3 px-4 py-3 rounded-xl 
@@ -52,24 +69,39 @@ const StudentDashboard: React.FC = () => {
         </p>
       </aside>
 
-      {/* CONTENT */}
-      <main className="flex-1 p-8 overflow-y-auto">
+      {/* MAIN AREA */}
+      <div className="flex-1 flex flex-col">
 
-        {/* TOP HEADER */}
-        <div className="mb-8 flex items-center justify-between bg-white p-6 rounded-2xl shadow-sm">
-          <div>
-            <h1 className="text-2xl font-semibold text-slate-800">
-              Welcome back 👋
-            </h1>
-            <p className="text-sm text-slate-500">
-              Manage your wallet and transactions Here
-            </p>
+        {/* MOBILE HEADER */}
+        <header className="lg:hidden flex items-center justify-between p-4 bg-white shadow">
+          <button onClick={() => setSidebarOpen(true)}>
+            <Menu className="w-6 h-6" />
+          </button>
+
+          <h1 className="font-semibold">Student Wallet</h1>
+        </header>
+
+        {/* CONTENT */}
+        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
+
+          {/* TOP HEADER */}
+          <div className="mb-8 flex items-center justify-between bg-white p-6 rounded-2xl shadow-sm">
+            <div>
+              <h1 className="text-2xl font-semibold text-slate-800">
+                Welcome back 👋
+              </h1>
+              <p className="text-sm text-slate-500">
+                Manage your wallet and transactions here
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* PAGE CONTENT */}
-        <Outlet />
-      </main>
+          {/* PAGE CONTENT */}
+          <Outlet />
+
+        </main>
+      </div>
+
     </div>
   );
 };
@@ -92,9 +124,10 @@ const SidebarLink: React.FC<SidebarProps> = ({ to, icon, label }) => {
       end
       className={({ isActive }) =>
         `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
-        ${isActive
-          ? "bg-white/20 text-white font-medium shadow"
-          : "text-purple-100 hover:bg-white/15 hover:text-white"
+        ${
+          isActive
+            ? "bg-white/20 text-white font-medium shadow"
+            : "text-purple-100 hover:bg-white/15 hover:text-white"
         }`
       }
     >

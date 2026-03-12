@@ -4,7 +4,6 @@ import {
   History,
   Settings,
   ArrowUpRight,
-  LayoutDashboard,
 } from "lucide-react";
 
 import BottomNav from "@/components/layout/BottomNav";
@@ -18,6 +17,7 @@ import VendorSettings from "./VendorSettings";
 
 const VendorDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("wallet");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const tabs = [
     { id: "wallet", label: "Wallet", icon: <Wallet className="w-5 h-5" /> },
@@ -44,35 +44,39 @@ const VendorDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
 
-      {/* Header */}
-      <MobileHeader />
+      {/* Mobile Header */}
+      <MobileHeader onMenuClick={() => setSidebarOpen(true)} />
 
-      {/* Sidebar (Desktop) */}
+      {/* Sidebar */}
       <DesktopSidebar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={(tab) => setActiveTab(tab)}
         tabs={tabs}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
       />
 
       {/* Main Content */}
       <main className="pt-16 pb-24 lg:pt-0 lg:pb-0 lg:ml-64 transition-all duration-300">
+
         <div className="p-4 lg:p-10 max-w-6xl mx-auto space-y-6">
 
-
-          {/* Content Card Wrapper */}
+          {/* Content Card */}
           <div className="glass-card rounded-2xl shadow-sm p-4 lg:p-8 transition hover:shadow-md">
             {renderContent()}
           </div>
 
         </div>
+
       </main>
 
       {/* Bottom Navigation (Mobile) */}
       <BottomNav
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={(tab) => setActiveTab(tab)}
         tabs={tabs}
       />
+
     </div>
   );
 };
