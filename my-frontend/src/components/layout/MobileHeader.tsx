@@ -1,16 +1,30 @@
 import React from "react";
-import { LogOut, Hexagon } from "lucide-react";
+import { LogOut, Hexagon, Menu } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
-const MobileHeader: React.FC = () => {
+interface Props {
+  onMenuClick: () => void;
+}
+
+const MobileHeader: React.FC<Props> = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
 
   return (
     <header className="lg:hidden fixed top-0 left-0 right-0 z-40 h-16 bg-card/90 backdrop-blur-xl border-b border-border/50">
+      
       <div className="flex items-center justify-between h-full px-4">
-        
+
         {/* Left Section */}
         <div className="flex items-center gap-3">
+
+          {/* Hamburger Menu */}
+          <button
+            onClick={onMenuClick}
+            className="p-2 rounded-lg hover:bg-muted transition"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+
           <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center">
             <Hexagon className="w-5 h-5 text-primary" />
           </div>
@@ -27,6 +41,7 @@ const MobileHeader: React.FC = () => {
 
         {/* Right Section */}
         <div className="flex items-center gap-3">
+
           <div className="text-right">
             <p className="text-sm font-medium">
               {user?.name}
@@ -39,9 +54,11 @@ const MobileHeader: React.FC = () => {
           >
             <LogOut className="w-5 h-5" />
           </button>
+
         </div>
 
       </div>
+
     </header>
   );
 };

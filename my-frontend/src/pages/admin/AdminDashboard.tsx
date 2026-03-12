@@ -22,8 +22,8 @@ import AdminSettings from "./AdminSettings";
 import AdminManageUsers from "./AdminManageUsers";
 
 const AdminDashboard: React.FC = () => {
-
   const [activeTab, setActiveTab] = useState("overview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const getPageTitle = () => {
     switch (activeTab) {
@@ -108,28 +108,42 @@ const AdminDashboard: React.FC = () => {
   ];
 
   const renderContent = () => {
-    if (activeTab === "overview") return <AdminOverview />;
-    if (activeTab === "students") return <AdminAddStudent />;
-    if (activeTab === "vendors") return <AdminAddVendor />;
-    if (activeTab === "manage") return <AdminManageUsers />;
-    if (activeTab === "mint") return <AdminMintTokens />;
-    if (activeTab === "transactions") return <AdminTransactions />;
-    if (activeTab === "settings") return <AdminSettings onNavigate={setActiveTab} />;
-    console.log("Active tab:", activeTab);
-    return <AdminOverview />;
+    switch (activeTab) {
+      case "overview":
+        return <AdminOverview />;
+      case "students":
+        return <AdminAddStudent />;
+      case "vendors":
+        return <AdminAddVendor />;
+      case "manage":
+        return <AdminManageUsers />;
+      case "mint":
+        return <AdminMintTokens />;
+      case "transactions":
+        return <AdminTransactions />;
+      case "settings":
+        return <AdminSettings onNavigate={setActiveTab} />;
+      default:
+        return <AdminOverview />;
+    }
   };
 
   return (
     <div className="min-h-screen bg-background">
 
-      <MobileHeader />
+      {/* Mobile Header */}
+      <MobileHeader onMenuClick={() => setSidebarOpen(true)} />
 
+      {/* Sidebar */}
       <DesktopSidebar
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}
         tabs={tabs}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
       />
 
+      {/* Main Content */}
       <main className="pt-16 pb-24 lg:pt-0 lg:pb-0 lg:ml-64">
 
         <div className="p-4 lg:p-8 max-w-6xl mx-auto space-y-6">
@@ -144,6 +158,7 @@ const AdminDashboard: React.FC = () => {
 
       </main>
 
+      {/* Mobile Bottom Navigation */}
       <BottomNav
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}
