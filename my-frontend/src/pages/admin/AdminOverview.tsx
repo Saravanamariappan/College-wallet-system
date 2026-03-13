@@ -77,10 +77,10 @@ const AdminOverview: React.FC = () => {
   if (loading) return <p>Loading...</p>;
 
   const statCards = [
-    { title: "Total Students", value: stats.students, icon: <Users /> },
-    { title: "Total Vendors", value: stats.vendors, icon: <Store /> },
-    { title: "Tokens Minted", value: stats.minted, icon: <Coins /> },
-    { title: "Transactions", value: stats.transactions, icon: <ArrowLeftRight /> }
+    { title: "Total Students", value: stats.students || 0, icon: <Users /> },
+    { title: "Total Vendors", value: stats.vendors || 0, icon: <Store /> },
+    { title: "Tokens Minted", value: stats.minted || 0, icon: <Coins /> },
+    { title: "Transactions", value: stats.transactions || 0, icon: <ArrowLeftRight /> }
   ];
 
   return (
