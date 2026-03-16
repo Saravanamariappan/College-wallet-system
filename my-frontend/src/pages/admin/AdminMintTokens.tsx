@@ -259,6 +259,22 @@ const AdminTokenManager: React.FC = () => {
 
             <>
 
+              {/* TOKEN LOGO SECTION */}
+              <div className="text-center py-6">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-warning/20 to-warning/10 rounded-full mb-4">
+                  <Coins className="w-10 h-10 text-warning" />
+                </div>
+                <h4 className="text-lg font-semibold text-foreground mb-2">
+                  {mode === "mint" ? "Mint KGCT Tokens" : "Send KGCT Tokens"}
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  {mode === "mint"
+                    ? "Create new tokens for student wallets"
+                    : "Transfer tokens to student accounts"
+                  }
+                </p>
+              </div>
+
               {/* STUDENT SELECT */}
 
               <select

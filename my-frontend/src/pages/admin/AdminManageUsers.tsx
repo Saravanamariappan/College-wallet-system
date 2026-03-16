@@ -109,7 +109,7 @@ const filteredVendors = vendors.filter((user) =>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         {/* ================= STUDENTS BOX ================= */}
-        <div className="bg-card rounded-xl shadow p-6">
+        <div className="bg-card rounded-xl shadow p-6 max-h-96 overflow-y-auto">
           <h2 className="text-xl font-bold mb-4 text-blue-600">
             Student Management ({filteredStudents.length})
           </h2>
@@ -159,7 +159,7 @@ const filteredVendors = vendors.filter((user) =>
         </div>
 
         {/* ================= VENDORS BOX ================= */}
-        <div className="bg-card rounded-xl shadow p-6">
+        <div className="bg-card rounded-xl shadow p-6 max-h-96 overflow-y-auto">
           <h2 className="text-xl font-bold mb-4 text-purple-600">
             Vendor Management ({filteredVendors.length})
           </h2>
