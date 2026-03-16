@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Send, ExternalLink, CheckCircle } from "lucide-react";
+import { Send, ExternalLink, CheckCircle, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "sonner";
@@ -122,68 +122,93 @@ const VendorPayAdmin: React.FC = () => {
 
       <div className="grid lg:grid-cols-2 gap-6">
 
-        {/* LEFT */}
-<div className="glass-card p-6 rounded-lg flex flex-col h-full">
+        {/* LEFT COLUMN */}
+        <div className="flex flex-col gap-6">
 
-  <div className="space-y-4">
-    <div className="flex justify-between bg-secondary/30 p-3 rounded-lg">
-      <span>Balance</span>
-      <b>{balance} KGCT</b>
-    </div>
+          {/* Payment Form */}
+          <div className="glass-card p-4 rounded-xl flex flex-col gap-4 h-fit">
 
-    <input
-      type="number"
-      value={amount}
-      onChange={(e) => setAmount(e.target.value)}
-      className="input-field"
-      placeholder="Enter amount"
-    />
-  </div>
-
-  {/* Push Button to Bottom */}
-  <button
-    onClick={handlePay}
-    disabled={loading}
-    className="btn-primary w-full flex items-center justify-center gap-2 mt-auto"
-  >
-    {loading ? <LoadingSpinner size="sm" /> : <Send size={16} />}
-    Pay Admin
-  </button>
-
-</div>
-
-        {/* RIGHT – COMPACT HISTORY (like image) */}
-        <div className="glass-card p-4 space-y-2 rounded-lg">
-          <h3 className="font-semibold">Payment History</h3>
-
-          {history.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center">
-              No history found
-            </p>
-          )}
-
-          {history.map((h) => (
-            <div
-              key={h.id}
-              className="flex items-center justify-between bg-secondary/20 px-3 py-2 rounded-lg"
-            >
-              <div>
-                <p className="text-sm font-medium">{h.amount} KGCT</p>
-                <p className="text-[11px] text-muted-foreground">
-                  {new Date(h.created_at).toLocaleString()}
-                </p>
+            <div className="space-y-3">
+              <div className="flex justify-between bg-secondary/30 p-3 rounded-lg">
+                <span className="text-sm font-medium">Balance</span>
+                <b className="text-sm text-primary">{balance} KGCT</b>
               </div>
 
-              {/* VERIFY ICON */}
-              <a
-                href={`${EXPLORER}${h.tx_hash}`}
-                target="_blank"
-                className="text-blue-400 hover:text-blue-300"
-              >
-                <ExternalLink size={16} />
-              </a>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="input-field py-3"
+                placeholder="Enter amount"
+              />
             </div>
-          ))}
+
+            <button
+              onClick={handlePay}
+              disabled={loading}
+              className="btn-primary w-full py-3 flex items-center justify-center gap-2 rounded-xl transition hover:scale-[1.02]"
+            >
+              {loading ? <LoadingSpinner size="sm" /> : <Send size={16} />}
+              Pay Admin
+            </button>
+
+          </div>
+
+          {/* Elegant Info Graphic Banner */}
+          <div className="bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/20 p-6 rounded-2xl shadow-md relative overflow-hidden group flex-1 flex flex-col justify-center min-h-[140px]">
+            <div className="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500">
+              <ShieldCheck className="w-24 h-24 text-primary" />
+            </div>
+
+            <div className="relative z-10 flex items-start gap-4">
+              <div className="bg-primary/20 p-3 rounded-2xl shadow-inner shrink-0 mt-1">
+                <ShieldCheck className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-foreground/90 tracking-wide mb-1">Secure Transfer</h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  All transactions are encrypted and recorded permanently on the Polygon blockchain, ensuring complete transparency and security between vendors and administration.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* RIGHT – COMPACT HISTORY (like image) */}
+        <div className="glass-card flex flex-col p-4 rounded-lg h-[320px]">
+          <h3 className="font-semibold mb-4 shrink-0">Payment History</h3>
+
+          <div className="flex-1 overflow-y-auto space-y-2 pr-2" style={{ scrollbarWidth: 'thin' }}>
+            {history.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center">
+                No history found
+              </p>
+            )}
+
+            {history.map((h) => (
+              <div
+                key={h.id}
+                className="flex items-center justify-between bg-secondary/20 px-3 py-2 rounded-lg shrink-0"
+              >
+                <div>
+                  <p className="text-sm font-medium">{h.amount} KGCT</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {new Date(h.created_at).toLocaleString()}
+                  </p>
+                </div>
+
+                {/* VERIFY ICON */}
+                <a
+                  href={`${EXPLORER}${h.tx_hash}`}
+                  target="_blank"
+                  className="text-blue-400 hover:text-blue-300 shrink-0"
+                >
+                  <ExternalLink size={16} />
+                </a>
+              </div>
+            ))}
+          </div>
         </div>
 
       </div>

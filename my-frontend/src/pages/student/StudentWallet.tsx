@@ -73,7 +73,7 @@ const StudentWallet: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold">Student Wallet</h1>
           <p className="text-sm text-muted-foreground">
-             Student transactions only managed here...
+            Student transactions only managed here...
           </p>
         </div>
       </div>
@@ -86,33 +86,71 @@ const StudentWallet: React.FC = () => {
                 p-6 
                 shadow-lg">
 
-  <WalletCard
-    address={walletAddress}
-    balance={balance}
-    name={user?.email}
-  />
+        <WalletCard
+          address={walletAddress}
+          balance={balance}
+          name={user?.email}
+        />
 
-</div>
+      </div>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="glass-card p-4 text-center rounded-xl hover:scale-105 transition">
-          <ArrowUpRight className="mx-auto mb-2 text-destructive" />
-          <p className="font-bold text-lg text-destructive">₹2450</p>
-          <p className="text-xs text-muted-foreground">Total Spent</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+
+        {/* Total Spent Card - Fuchsia Gradient */}
+        <div className="bg-gradient-to-br from-fuchsia-500/20 via-fuchsia-500/5 to-transparent border border-fuchsia-500/20 p-6 rounded-2xl shadow-md hover:shadow-fuchsia-500/10 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
+            <ArrowUpRight className="w-20 h-20 text-fuchsia-500" />
+          </div>
+          <div className="relative z-10 flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <div className="bg-fuchsia-500/20 p-2.5 rounded-xl">
+                <ArrowUpRight className="w-6 h-6 text-fuchsia-500" />
+              </div>
+              <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Spent</p>
+            </div>
+            <p className="text-3xl lg:text-4xl font-black text-fuchsia-500 mt-2">
+              <span className="text-lg font-bold text-fuchsia-500/70">₹</span>2450
+            </p>
+          </div>
         </div>
 
-        <div className="glass-card p-4 text-center rounded-xl hover:scale-105 transition">
-          <ArrowDownLeft className="mx-auto mb-2 text-success" />
-          <p className="font-bold text-lg text-success">₹500</p>
-          <p className="text-xs text-muted-foreground">Total Received</p>
+        {/* Total Received Card - Primary Gradient */}
+        <div className="bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/20 p-6 rounded-2xl shadow-md hover:shadow-primary/10 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500">
+            <ArrowDownLeft className="w-20 h-20 text-primary" />
+          </div>
+          <div className="relative z-10 flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <div className="bg-primary/20 p-2.5 rounded-xl">
+                <ArrowDownLeft className="w-6 h-6 text-primary" />
+              </div>
+              <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Received</p>
+            </div>
+            <p className="text-3xl lg:text-4xl font-black text-primary mt-2">
+              <span className="text-lg font-bold text-primary/70">₹</span>500
+            </p>
+          </div>
         </div>
 
-        <div className="glass-card p-4 text-center rounded-xl hover:scale-105 transition">
-          <TrendingUp className="mx-auto mb-2 text-primary" />
-          <p className="font-bold text-lg text-primary">+12%</p>
-          <p className="text-xs text-muted-foreground">Savings Growth</p>
+        {/* Savings Growth Card - Indigo Gradient */}
+        <div className="bg-gradient-to-br from-indigo-500/20 via-indigo-500/5 to-transparent border border-indigo-500/20 p-6 rounded-2xl shadow-md hover:shadow-indigo-500/10 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
+            <TrendingUp className="w-20 h-20 text-indigo-500" />
+          </div>
+          <div className="relative z-10 flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <div className="bg-indigo-500/20 p-2.5 rounded-xl">
+                <TrendingUp className="w-6 h-6 text-indigo-500" />
+              </div>
+              <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Savings Growth</p>
+            </div>
+            <p className="text-3xl lg:text-4xl font-black text-indigo-500 mt-2">
+              +12<span className="text-lg font-bold text-indigo-500/70">%</span>
+            </p>
+          </div>
         </div>
+
       </div>
 
       {/* Quick Actions */}
