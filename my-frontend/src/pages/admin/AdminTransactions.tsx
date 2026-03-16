@@ -7,6 +7,7 @@ import { Transaction } from '@/types';
 const AdminTransactions: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     loadTransactions();
@@ -38,6 +39,13 @@ const AdminTransactions: React.FC = () => {
   const failedTx = transactions.filter(
     (tx) => tx.status === 'FAILED'
   ).length;
+
+  const filteredTransactions = transactions.filter((tx) =>
+    tx.studentWallet.toLowerCase().includes(search.toLowerCase()) ||
+    tx.vendorWallet.toLowerCase().includes(search.toLowerCase()) ||
+    tx.txHash.toLowerCase().includes(search.toLowerCase()) ||
+    tx.status.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -73,7 +81,21 @@ const AdminTransactions: React.FC = () => {
         </div>
       </div>
 
-      <TransactionTable transactions={transactions} />
+      {/* Search Bar */}
+      <div className="flex justify-center">
+        <input
+          type="text"
+          placeholder="Search by wallet address, transaction hash, or status..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full md:w-1/2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Transactions Container with Scroll */}
+      <div className="max-h-96 overflow-y-auto">
+        <TransactionTable transactions={filteredTransactions} />
+      </div>
     </div>
   );
 };
