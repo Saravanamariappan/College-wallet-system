@@ -70,16 +70,29 @@ const StudentSettings: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
 
       {/* PROFILE */}
-      <div className="bg-white/20 
-                backdrop-blur-md 
-                border border-white/30 
-                rounded-2xl 
-                p-6 
-                shadow-lg">
-        <h3 className="text-xl font-semibold mb-1">{safeName}</h3>
-        <p className="text-muted-foreground">{user?.email}</p>
-        <p className="text-xs mt-1">ID: {user?.id}</p>
-      </div>
+      <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-6 shadow-lg flex items-center gap-4 hover:shadow-xl transition">
+
+  {/* Avatar */}
+  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white text-lg font-bold shadow-md">
+    {safeName?.charAt(0).toUpperCase()}
+  </div>
+
+  {/* User Info */}
+  <div className="flex flex-col">
+    <h3 className="text-xl font-semibold text-slate-800 leading-tight">
+      {safeName}
+    </h3>
+
+    <p className="text-sm text-slate-500">
+      {user?.email}
+    </p>
+
+    <p className="text-xs text-slate-400 mt-1">
+      ID: {user?.id}
+    </p>
+  </div>
+
+</div>
 
       {/* WALLET */}
       <div className="bg-white/20 
@@ -128,61 +141,52 @@ const StudentSettings: React.FC = () => {
       </div>
 
       {/* CHANGE PASSWORD */}
-      <div className="bg-white/20 
-                backdrop-blur-md 
-                border border-white/30 
-                rounded-2xl 
-                p-6 
-                shadow-lg">
-        <h3 className="font-semibold mb-3 flex items-center gap-2">
-          <Key className="w-5 h-5" />
-          Change Password
-        </h3>
+     {/* CHANGE PASSWORD */}
+<div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-6 shadow-lg hover:shadow-xl transition space-y-5">
 
-        <div className="flex flex-col gap-3">
-          <input
-            type="password"
-            placeholder="Old Password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            className="input input-bordered w-full"
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="input input-bordered w-full"
-          />
-          <button
-            onClick={handleChangePassword}
-            className="btn btn-primary"
-            disabled={updatingPassword}
-          >
-            {updatingPassword ? "Updating..." : "Update Password"}
-          </button>
-        </div>
-      </div>
+  {/* Header */}
+  <div className="flex items-center gap-3">
+    <div className="p-2 rounded-lg bg-purple-100 text-purple-600">
+      <Key className="w-5 h-5" />
+    </div>
+    <h3 className="font-semibold text-lg text-slate-800">
+      Change Password
+    </h3>
+  </div>
 
-      {/* LOGOUT */}
-      <button
-  onClick={logout}
-  className="w-full 
-             bg-white 
-             border border-red-200 
-             rounded-xl 
-             p-3 
-             flex items-center justify-center gap-2 
-             text-red-500 
-             font-medium
-             shadow-sm
-             hover:bg-red-50 
-             hover:border-red-300
-             transition"
->
-  <LogOut className="w-5 h-5" />
-  Logout
-</button>
+  {/* Inputs */}
+  <div className="flex flex-col gap-4">
+
+    <input
+      type="password"
+      placeholder="Old Password"
+      value={oldPassword}
+      onChange={(e) => setOldPassword(e.target.value)}
+      className="w-full px-4 py-2 rounded-xl border border-slate-200 bg-white/60 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+    />
+
+    <input
+      type="password"
+      placeholder="New Password"
+      value={newPassword}
+      onChange={(e) => setNewPassword(e.target.value)}
+      className="w-full px-4 py-2 rounded-xl border border-slate-200 bg-white/60 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+    />
+
+  </div>
+
+  {/* Button */}
+  <button
+    onClick={handleChangePassword}
+    disabled={updatingPassword}
+    className="w-full py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium shadow-md hover:scale-[1.02] hover:shadow-lg transition disabled:opacity-60"
+  >
+    {updatingPassword ? "Updating..." : "Update Password"}
+  </button>
+
+</div>
+
+      
     </div>
   );
 };

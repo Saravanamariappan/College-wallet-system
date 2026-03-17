@@ -4,12 +4,12 @@ import { Wallet, Send, History, Settings, LogOut, Menu } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 const StudentDashboard: React.FC = () => {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const initial = user?.email?.charAt(0)?.toUpperCase() || "S";
 
   return (
-    <div className="flex min-h-screen bg-slate-100">
-
+    <div className="flex h-screen overflow-hidden bg-slate-100">
       {/* MOBILE OVERLAY */}
       {sidebarOpen && (
         <div
@@ -24,7 +24,7 @@ const StudentDashboard: React.FC = () => {
         fixed lg:static z-50
         w-64 h-screen
         bg-gradient-to-b from-purple-700 via-purple-800 to-purple-900
-        text-white flex flex-col p-6 shadow-xl
+        text-white flex flex-col p-6 shadow-md
         transform transition-transform duration-300
 
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -42,6 +42,21 @@ const StudentDashboard: React.FC = () => {
             Student Wallet
           </h2>
         </div>
+       {/* STUDENT INFO */}
+<div className="flex items-center gap-3 mb-8 px-1 py-4 border-y border-white/10">
+  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-semibold">
+    {initial}
+  </div>
+
+  <div className="flex-1 min-w-0">
+    <p className="text-sm font-medium truncate text-white">
+      {user?.email}
+    </p>
+    <p className="text-xs text-purple-200">
+      Student
+    </p>
+  </div>
+</div>
 
         {/* NAV LINKS */}
         <nav className="space-y-3 flex-1">
@@ -82,19 +97,9 @@ const StudentDashboard: React.FC = () => {
         </header>
 
         {/* CONTENT */}
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 p-6 lg:p-8">
 
-          {/* TOP HEADER */}
-          <div className="mb-8 flex items-center justify-between bg-white p-6 rounded-2xl shadow-sm">
-            <div>
-              <h1 className="text-2xl font-semibold text-slate-800">
-                Welcome back 👋
-              </h1>
-              <p className="text-sm text-slate-500">
-                Manage your wallet and transactions here
-              </p>
-            </div>
-          </div>
+
 
           {/* PAGE CONTENT */}
           <Outlet />
