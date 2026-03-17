@@ -103,50 +103,61 @@ const StudentPay: React.FC = () => {
       </div>
 
       {/* BALANCE CARD */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-2xl shadow-lg">
-        <p className="text-sm opacity-80">Available Balance</p>
-        {fetchingBalance ? (
-          <div className="h-8 w-28 bg-white/30 animate-pulse rounded-md mt-2" />
-        ) : (
-          <p className="text-3xl font-bold mt-1">{balance} KGCT</p>
-        )}
-      </div>
+      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-2xl shadow-lg flex items-center gap-4">
+  
+  {/* Rupee Avatar (Left) */}
+  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl font-semibold backdrop-blur-sm">
+    ₹
+  </div>
 
+  {/* Balance Content */}
+  <div>
+    <p className="text-sm opacity-80">Available Balance</p>
+    {fetchingBalance ? (
+      <div className="h-8 w-28 bg-white/30 animate-pulse rounded-md mt-2" />
+    ) : (
+      <p className="text-3xl font-bold mt-1">{balance} KGCT</p>
+    )}
+  </div>
+
+</div>
       {/* PAYMENT CARD */}
       <div className="bg-white p-8 rounded-2xl shadow-md space-y-6">
 
         {!txResult ? (
           <>
-            {/* Vendor Select */}
-            <div>
-              <label className="text-sm font-medium text-slate-700">
-                Select Vendor
-              </label>
-              <select
-                className="w-full mt-2 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
-                value={selectedVendor?.id || ""}
-                onChange={(e) => {
-                  const v = vendors.find(x => x.id === Number(e.target.value));
-                  setSelectedVendor(v || null);
-                }}
-              >
-                <option value="">-- Select Vendor --</option>
-                {vendors.map(v => (
-                  <option key={v.id} value={v.id}>
-                    {v.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="relative mt-2">
+              {/* VENDOR SELECT */}
 
-            {selectedVendor && (
-              <div className="p-4 bg-slate-100 rounded-xl">
-                <p className="text-xs text-slate-500">Vendor Wallet</p>
-                <p className="font-mono text-sm break-all">
-                  {selectedVendor.wallet_address}
-                </p>
-              </div>
-            )}
+  <select
+    className="
+      w-full px-4 py-3 pr-10
+      border rounded-xl
+      bg-white
+      appearance-none
+      focus:ring-2 focus:ring-purple-500
+      outline-none
+      text-slate-700
+    "
+    value={selectedVendor?.id || ""}
+    onChange={(e) => {
+      const v = vendors.find(x => x.id === Number(e.target.value));
+      setSelectedVendor(v || null);
+    }}
+  >
+    <option  value="">-- Select Vendor --</option>
+    {vendors.map(v => (
+      <option key={v.id} value={v.id}>
+        {v.name}
+      </option>
+    ))}
+  </select>
+
+  {/* Custom dropdown icon */}
+  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-500">
+    ▼
+  </div>
+</div>
 
             {/* Amount */}
             <div>
@@ -177,22 +188,21 @@ const StudentPay: React.FC = () => {
 
             {/* Pay Button */}
             <button
-              onClick={handlePay}
-              disabled={loading}
-              className="w-full py-3 rounded-xl font-semibold 
-                         bg-purple-600 text-white 
-                         hover:bg-purple-700 transition
-                         flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <LoadingSpinner size="sm" />
-              ) : (
-                <>
-                  <Send size={18} />
-                  Pay Now
-                </>
-              )}
-            </button>
+  onClick={handlePay}
+  disabled={loading}
+  className="send-btn w-full justify-center bg-purple-600 hover:bg-purple-700 text-white"
+>
+  {loading ? (
+    <LoadingSpinner size="sm" />
+  ) : (
+    <>
+      <div className="svg-wrapper">
+        <Send size={18} />
+      </div>
+      <span>Pay Now</span>
+    </>
+  )}
+</button>
           </>
         ) : (
           /* SUCCESS UI */

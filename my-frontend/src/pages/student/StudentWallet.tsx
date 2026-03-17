@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import WalletCard from "@/components/common/WalletCard";
 import { getStudentWallet } from "@/services/studentApi";
+import { Copy } from "lucide-react";
 
 const StudentWallet: React.FC = () => {
   const { user, loading: authLoading } = useAuth();
@@ -61,108 +62,145 @@ const StudentWallet: React.FC = () => {
       </div>
     );
   }
+  const copyAddress = () => {
+  navigator.clipboard.writeText(walletAddress);
+};
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
 
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="bg-primary/10 p-3 rounded-xl">
-          <Wallet className="text-primary w-6 h-6" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">Student Wallet</h1>
-          <p className="text-sm text-muted-foreground">
-            Student transactions only managed here...
-          </p>
-        </div>
-      </div>
+      <div className="space-y-10">
 
-      {/* Wallet Card */}
-      <div className="bg-white/20 
-                backdrop-blur-md 
-                border border-white/30 
-                rounded-2xl 
-                p-6 
-                shadow-lg">
+  {/* Header */}
+  <div className="flex items-center gap-4">
+    
+    <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-3 rounded-xl shadow-md">
+      <Wallet className="text-white w-6 h-6" />
+    </div>
 
-        <WalletCard
-          address={walletAddress}
-          balance={balance}
-          name={user?.email}
-        />
+    <div>
+      <h1 className="text-3xl font-bold tracking-tight">
+        Student Wallet
+      </h1>
 
-      </div>
+      <p className="text-sm text-muted-foreground">
+        Student transactions are securely managed here.
+      </p>
+    </div>
 
+  </div>
+
+
+  <div className="space-y-4">
+
+  {/* BALANCE */}
+  <div className="flex items-center gap-3 bg-white/20 rounded-xl px-4 py-3">
+    
+    {/* avatar */}
+    <div className="w-8 h-8 flex items-center justify-center rounded-full bg-purple-500 text-white text-sm font-semibold">
+      ₹
+    </div>
+
+    <div>
+      <p className="text-xs text-slate-500">Balance</p>
+      <p className="font-semibold text-lg">₹ {balance}</p>
+    </div>
+
+  </div>
+
+ <div className="flex items-center justify-between bg-white/20 rounded-xl px-4 py-3">
+
+  <div className="flex items-center gap-3">
+
+    {/* avatar */}
+    <div className="w-8 h-8 flex items-center justify-center rounded-full bg-indigo-500 text-white text-xs">
+      ID
+    </div>
+
+    <div>
+      
+      <p className="text-xs text-slate-500">Wallet Address</p>
+      <p className="font-mono text-sm">
+        ••••••••••••••••••
+      </p>
+    </div>
+
+  </div>
+
+  {/* copy icon */}
+  <span
+  onClick={copyAddress}
+  title="Copy wallet address"
+  className="cursor-pointer"
+>
+  <Copy
+    size={16}
+    className="text-slate-600 hover:text-purple-600 transition"
+  />
+</span>
+</div>
+  </div>
+
+</div>
       {/* Stats Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+<div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
-        {/* Total Spent Card - Fuchsia Gradient */}
-        <div className="bg-gradient-to-br from-fuchsia-500/20 via-fuchsia-500/5 to-transparent border border-fuchsia-500/20 p-6 rounded-2xl shadow-md hover:shadow-fuchsia-500/10 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
-            <ArrowUpRight className="w-20 h-20 text-fuchsia-500" />
-          </div>
-          <div className="relative z-10 flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <div className="bg-fuchsia-500/20 p-2.5 rounded-xl">
-                <ArrowUpRight className="w-6 h-6 text-fuchsia-500" />
-              </div>
-              <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Spent</p>
-            </div>
-            <p className="text-3xl lg:text-4xl font-black text-fuchsia-500 mt-2">
-              <span className="text-lg font-bold text-fuchsia-500/70">₹</span>2450
-            </p>
-          </div>
-        </div>
+  {/* Total Spent */}
+  <div className="glass-card p-5 rounded-2xl flex items-center gap-4 hover:scale-[1.03] transition shadow-sm">
+    
+    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-red-100">
+      <ArrowUpRight className="text-red-500" size={22} />
+    </div>
 
-        {/* Total Received Card - Primary Gradient */}
-        <div className="bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/20 p-6 rounded-2xl shadow-md hover:shadow-primary/10 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500">
-            <ArrowDownLeft className="w-20 h-20 text-primary" />
-          </div>
-          <div className="relative z-10 flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary/20 p-2.5 rounded-xl">
-                <ArrowDownLeft className="w-6 h-6 text-primary" />
-              </div>
-              <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Total Received</p>
-            </div>
-            <p className="text-3xl lg:text-4xl font-black text-primary mt-2">
-              <span className="text-lg font-bold text-primary/70">₹</span>500
-            </p>
-          </div>
-        </div>
+    <div>
+      <p className="text-xl font-bold text-red-500">₹2450</p>
+      <p className="text-xs text-muted-foreground">Total Spent</p>
+    </div>
 
-        {/* Savings Growth Card - Indigo Gradient */}
-        <div className="bg-gradient-to-br from-indigo-500/20 via-indigo-500/5 to-transparent border border-indigo-500/20 p-6 rounded-2xl shadow-md hover:shadow-indigo-500/10 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
-            <TrendingUp className="w-20 h-20 text-indigo-500" />
-          </div>
-          <div className="relative z-10 flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <div className="bg-indigo-500/20 p-2.5 rounded-xl">
-                <TrendingUp className="w-6 h-6 text-indigo-500" />
-              </div>
-              <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Savings Growth</p>
-            </div>
-            <p className="text-3xl lg:text-4xl font-black text-indigo-500 mt-2">
-              +12<span className="text-lg font-bold text-indigo-500/70">%</span>
-            </p>
-          </div>
-        </div>
+  </div>
 
-      </div>
+  {/* Total Received */}
+  <div className="glass-card p-5 rounded-2xl flex items-center gap-4 hover:scale-[1.03] transition shadow-sm">
+    
+    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100">
+      <ArrowDownLeft className="text-green-500" size={22} />
+    </div>
 
+    <div>
+      <p className="text-xl font-bold text-green-500">₹500</p>
+      <p className="text-xs text-muted-foreground">Total Received</p>
+    </div>
+
+  </div>
+
+  {/* Savings Growth */}
+  <div className="glass-card p-5 rounded-2xl flex items-center gap-4 hover:scale-[1.03] transition shadow-sm">
+    
+    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-purple-100">
+      <TrendingUp className="text-purple-600" size={22} />
+    </div>
+
+    <div>
+      <p className="text-xl font-bold text-purple-600">+12%</p>
+      <p className="text-xs text-muted-foreground">Savings Growth</p>
+    </div>
+
+  </div>
+
+</div>
       {/* Quick Actions */}
       <div className="glass-card p-6 rounded-xl shadow-sm">
         <h3 className="font-semibold mb-4 text-lg">Quick Actions</h3>
 
         <button
-          onClick={() => navigate("/student/pay")}
-          className="btn-primary py-3 w-full flex items-center justify-center gap-2 text-base rounded-lg hover:scale-[1.02] transition"
-        >
-          <Send className="w-4 h-4" /> Send Money
-        </button>
+  onClick={() => navigate("/student/pay")}
+  className="send-btn w-full justify-center"
+>
+  <div className="svg-wrapper">
+    <Send size={18} />
+  </div>
+  <span>Send Money</span>
+</button>
       </div>
     </div>
   );
